@@ -1,0 +1,55 @@
+
+spring:
+  application:
+    name: MUSICAL-WORLD-BACKEND
+
+---
+spring:
+  profiles: default
+  datasource:
+    url: jdbc:mysql://127.0.0.1:3306/musician_world?useSSL=false&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC
+    username: root
+    password: root
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: false
+  data:
+    rest:
+      detection-strategy: annotated
+server:
+  servlet:
+    context-path: /musicalworld/rest
+  port: 8085
+
+---
+spring:
+  profiles: develop
+  data:
+    rest:
+      detection-strategy: annotated
+server:
+  servlet:
+    context-path: /musicalworld/rest
+  port: 8090
+
+---
+spring:
+  profiles: local
+  datasource:
+    url: jdbc:mysql://127.0.0.1:3306/musician_world?useSSL=false&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC
+    username: root
+    password: root
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: false
+  data:
+    rest:
+      detection-strategy: annotated
+server:
+  servlet:
+    context-path: /musicalworld/rest
+  port: 8095
+
+---

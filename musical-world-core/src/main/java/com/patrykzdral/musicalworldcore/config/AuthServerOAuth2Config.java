@@ -19,44 +19,30 @@ import javax.sql.DataSource;
 @Configuration
 @EnableAuthorizationServer
 public class AuthServerOAuth2Config extends AuthorizationServerConfigurerAdapter {
-
     @Autowired
-    private DataSource dataSource;
-
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-
-    @Autowired
-    @Qualifier(value = "authServerAuthenticationManager")
-    private AuthenticationManager authenticationManager;
-
-    @Bean
-    public TokenStore tokenStore() {
-        return new JdbcTokenStore(dataSource);
-    }
+    AuthenticationManager authenticationManager;
 
     @Override
     public void configure(AuthorizationServerSecurityConfigurer security) {
         security
                 .tokenKeyAccess("permitAll()")
-                .checkTokenAccess("isAuthenticated()")
-                .passwordEncoder(passwordEncoder);
+                .checkTokenAccess("isAuthenticated()");
     }
 
     @Override
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
         clients.inMemory()
-                .withClient("client")
-                .secret("secret")
-                .authorizedGrantTypes("password", "authorization_code")
-                .scopes("read", "write")
-                .accessTokenValiditySeconds(60 * 60 * 8);
+                .withClient("my-trusted-client")
+                .authorizedGrantTypes("client_credentials","password")
+                .authorities("ROLE_CLIENT","ROLE_TRUSTED_CLIENT")
+                .scopes("read","write","trust")
+                .resourceIds("oauth2-resource")
+                .accessTokenValiditySeconds(5000)
+                .secret("secret");
     }
 
     @Override
     public void configure(AuthorizationServerEndpointsConfigurer endpoints) {
-        endpoints
-                .tokenStore(tokenStore())
-                .authenticationManager(authenticationManager);
+        endpoints.authenticationManager(authenticationManager);
     }
 }

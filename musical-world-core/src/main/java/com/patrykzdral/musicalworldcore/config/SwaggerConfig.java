@@ -23,11 +23,11 @@ import static springfox.documentation.builders.PathSelectors.any;
 public class SwaggerConfig {
 
     private static final Contact DEFAULT_CONTACT = new Contact(
-            "Kamil Cieślik", "https://github.com/kamilcieslik", "kamil.cieslik@protonmail.com");
+            "Patryk Zdral", "https://github.com/patrykzdral", "patrykz13@gmail.com");
 
     private static final ApiInfo DEFAULT_API_INFO = new ApiInfoBuilder()
-            .title("PlayApp")
-            .description("Backend services for 'playApp' application " +
+            .title("Musical World")
+            .description("Backend services for 'Musical World' application " +
                     "(Engineer's Thesis | Wrocław University of Science and Technology | 2018)")
             .version("1.0")
             .contact(DEFAULT_CONTACT)

@@ -11,7 +11,6 @@
 
     <modules>
         <module>musical-world-db-deploy</module>
-        <module>musical-world-ui</module>
         <module>musical-world-core</module>
     </modules>
 

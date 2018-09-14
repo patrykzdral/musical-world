@@ -2,7 +2,21 @@
 spring:
   application:
     name: MUSICAL-WORLD-BACKEND
-
+  mail:
+    host: smtp.gmail.com
+    port: 465
+    protocol: smtps
+    username: musical.world.apk@gmail.com
+    password: mworld365!
+    properties:
+      mail:
+        transport:
+          protocol: smtps
+        smtps:
+          auth: true
+          starttls:
+            enable: true
+          timeout: 8000
 ---
 spring:
   profiles: default
@@ -12,7 +26,7 @@ spring:
     password: root
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: validate
     show-sql: false
   data:
     rest:

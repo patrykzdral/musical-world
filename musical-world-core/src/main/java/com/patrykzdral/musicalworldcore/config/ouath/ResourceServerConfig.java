@@ -1,4 +1,4 @@
-package com.patrykzdral.musicalworldcore.config;
+package com.patrykzdral.musicalworldcore.config.ouath;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -16,8 +16,14 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 
     @Override
     public void configure(HttpSecurity http) throws Exception {
-        http.authorizeRequests()
-                .antMatchers("/").permitAll()
-                .antMatchers("/private/**").authenticated();
+        http
+                .headers()
+                .frameOptions()
+                .disable()
+                .and()
+                .authorizeRequests()
+                .antMatchers("/login").permitAll()
+                .antMatchers("/register").permitAll()
+                .antMatchers("/api/**").authenticated();
     }
 }

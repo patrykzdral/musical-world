@@ -1,6 +1,8 @@
 package com.patrykzdral.musicalworldcore;
 
 import com.patrykzdral.musicalworldcore.persistance.repository.UserRepository;
+import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -11,14 +13,12 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 @SpringBootApplication
+@Slf4j
 public class MusicalWorldCoreApplication {
 
-    public static void main(String[] args) {
+    public static void main(String[] args)
+    {
         SpringApplication.run(MusicalWorldCoreApplication.class, args);
     }
 
-    @Autowired
-    public void authenticationManager(AuthenticationManagerBuilder builder, UserRepository  repo) throws Exception {
-        builder.userDetailsService(s -> new CustomUserDetails(repo.findByUsername(s)));
-    }
 }

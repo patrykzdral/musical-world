@@ -1,4 +1,4 @@
-package com.patrykzdral.musicalworldcore.services.controller;
+package com.patrykzdral.musicalworldcore.services;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -9,7 +9,7 @@ public class HomeController {
     @GetMapping(value="/")
     public String home(){ return "hello";}
 
-    @GetMapping(value="/private")
+    @GetMapping(value="/api")
     public String privateArea(){
         return "private";
     }

@@ -23,11 +23,11 @@ public class CustomUserDetails extends User {
         this.rememberMe = rememberMe;
     }
 
-    public CustomUserDetails(String username, String password,boolean enabled, boolean accountNonExpired,
+    public CustomUserDetails(String username, String password, boolean enabled, boolean accountNonExpired,
                              boolean credentialsNonExpired, boolean accountNonLocked,
                              Collection<? extends GrantedAuthority> authorities,
                              String email, boolean rememberMe) {
-        super(username, password, enabled,accountNonExpired,credentialsNonExpired,accountNonLocked,authorities);
+        super(username, password, enabled, accountNonExpired, credentialsNonExpired, accountNonLocked, authorities);
         this.email = email;
         this.rememberMe = rememberMe;
     }

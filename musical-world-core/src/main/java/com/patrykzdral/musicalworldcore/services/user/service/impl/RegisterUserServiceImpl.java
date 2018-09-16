@@ -26,6 +26,7 @@ public class RegisterUserServiceImpl implements RegisterUserService {
     private static final String TOKEN_INVALID = "invalidToken";
     private static final String TOKEN_EXPIRED = "expired";
     private static final String TOKEN_VALID = "valid";
+
     @Autowired
     public RegisterUserServiceImpl(RoleRepository roleRepository, @Qualifier("bCryptPasswordEncoder") PasswordEncoder passwordEncoder, UserRepository userRepository, TokenRepository tokenRepository) {
         this.roleRepository = roleRepository;

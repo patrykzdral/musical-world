@@ -31,7 +31,7 @@ public class UserController {
 
     @RequestMapping(method = RequestMethod.POST, value = "/register")
     @ResponseBody
-    public ResponseEntity<Object> save(@Valid @RequestBody RegisterUserRequestDTO registerUserRequestDTO,  final HttpServletRequest request) {
+    public ResponseEntity<Object> save(@Valid @RequestBody RegisterUserRequestDTO registerUserRequestDTO, final HttpServletRequest request) {
         User user = registerUserService.registerUserAccount(registerUserRequestDTO);
         log.info(getAppUrl(request));
         eventPublisher.publishEvent(new OnRegistrationCompleteEvent(user, request.getLocale(), getAppUrl(request)));

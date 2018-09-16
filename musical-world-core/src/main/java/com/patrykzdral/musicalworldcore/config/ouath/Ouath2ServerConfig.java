@@ -19,6 +19,7 @@ import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JdbcTokenStore;
 
 import javax.sql.DataSource;
+
 @Configuration
 @SuppressWarnings("ALL")
 @EnableAuthorizationServer

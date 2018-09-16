@@ -3,7 +3,6 @@ package com.patrykzdral.musicalworldcore.services.user.exception;
 import lombok.Data;
 
 import java.sql.Timestamp;
-import java.util.Date;
 
 @Data
 public class ErrorResponse {

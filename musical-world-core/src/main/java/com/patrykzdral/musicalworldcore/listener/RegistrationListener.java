@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.MessageSource;
 import org.springframework.core.env.Environment;
-import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Component;
@@ -38,11 +37,11 @@ public class RegistrationListener implements ApplicationListener<OnRegistrationC
     }
 
     @Override
-    public void onApplicationEvent(final OnRegistrationCompleteEvent event)  {
+    public void onApplicationEvent(final OnRegistrationCompleteEvent event) {
         try {
             this.confirmRegistration(event);
         } catch (MessagingException e) {
-            throw new InternalException("Sending mail error",e.getMessage());
+            throw new InternalException("Sending mail error", e.getMessage());
         }
     }
 
@@ -74,7 +73,7 @@ public class RegistrationListener implements ApplicationListener<OnRegistrationC
                         + "<div>Dear User,"
                         + "<div><strong>please confirm registration using link below: </strong> <br/><br/></div>"
                         + "<div>"
-                        + "<a href="+confirmationUrl+"><img src='cid:link' style='float:center;'/>"
+                        + "<a href=" + confirmationUrl + "><img src='cid:link' style='float:center;'/>"
                         + "<br/><br/></div>"
                         + "<div>We hope you will use the app with pleasure!</div>"
                         + "<div>Thanks,</div>"

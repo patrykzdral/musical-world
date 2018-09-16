@@ -24,8 +24,8 @@ public class EmailValidator implements ConstraintValidator<ValidEmail, String> {
     private boolean validateEmail(final String email) {
         Pattern pattern = Pattern.compile(EMAIL_PATTERN);
         Matcher matcher = pattern.matcher(email);
-        if(!matcher.matches())
-            throw new InternalException("Registration error",message);
+        if (!matcher.matches())
+            throw new InternalException("Registration error", message);
         return matcher.matches();
     }
 }

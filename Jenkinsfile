@@ -29,8 +29,8 @@ pipeline {
         stage('Flyway DB Migration') {
             steps {
                 dir("${WORKSPACE}/musical-world-db-deploy/") {
-                    sh "'${M2_HOME}/bin/mvn' flyway:clean -P develop -Denv.DATASOURCE_URL=$DATASOURCE_URL -Denv.DATASOURCE_USERNAME=$DATASOURCE_USERNAME -Denv.DATASOURCE_PASSWORD=$DATASOURCE_PASSWORD"
-                    sh "'${M2_HOME}/bin/mvn' flyway:migrate -P develop -Denv.DATASOURCE_URL=$DATASOURCE_URL -Denv.DATASOURCE_USERNAME=$DATASOURCE_USERNAME -Denv.DATASOURCE_PASSWORD=$DATASOURCE_PASSWORD"
+                    sh "'${M2_HOME}/bin/mvn' flyway:clean -P develop"
+                    sh "'${M2_HOME}/bin/mvn' flyway:migrate -P develop"
                 }
             }
 

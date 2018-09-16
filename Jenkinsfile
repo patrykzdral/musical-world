@@ -21,7 +21,7 @@ pipeline {
 
             post {
                 failure {
-                    notifyStarted("Fetch failed in Jenkins!")
+                    echo "Fetch failed in Jenkins!"
                 }
             }
         }
@@ -36,7 +36,7 @@ pipeline {
 
             post {
                 failure {
-                    notifyStarted("Flyway DB Migration failed in Jenkins!")
+                    echo "Flyway DB Migration failed in Jenkins!"
                 }
             }
         }
@@ -48,7 +48,7 @@ pipeline {
 
             post {
                 failure {
-                    notifyStarted("Build failed in Jenkins!")
+                    echo "Build failed in Jenkins!"
                 }
             }
         }
@@ -62,7 +62,7 @@ pipeline {
 
                     post {
                         failure {
-                            notifyStarted("Unit tests failed in Jenkins!")
+                            echo "Unit tests failed in Jenkins!"
                         }
                     }
                 }
@@ -74,7 +74,7 @@ pipeline {
 
                     post {
                         failure {
-                            notifyStarted("Integration tests failed in Jenkins!")
+                            echo "Integration tests failed in Jenkins!"
                         }
                     }
                 }
@@ -86,7 +86,7 @@ pipeline {
 
                     post {
                         failure {
-                            notifyStarted("Smoke tests failed in Jenkins!")
+                            echo "Smoke tests failed in Jenkins!"
                         }
                     }
                 }
@@ -96,7 +96,7 @@ pipeline {
 
     post {
         success {
-            notifyStarted("All is well! Code is tested, built and deployed.")
+            echo "All is well! Code is tested, built and deployed."
         }
     }
 }

@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import javax.mail.MessagingException;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.List;
@@ -27,7 +28,12 @@ public class UserRegistrationExceptionHandler extends ResponseEntityExceptionHan
         var response = new ErrorResponse(internalException.getErrorCode(), internalException.getMessage(), Timestamp.from(Instant.now()));
         return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
     }
-
+    @ExceptionHandler({MessagingException.class})
+    public ResponseEntity<Object> handleMessageException(MessagingException message) {
+        logger.error("400 Status Code", message);
+        var response = new ErrorResponse("Mail sending error", message.getMessage(), Timestamp.from(Instant.now()));
+        return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
 
 
 }

@@ -6,13 +6,15 @@ CREATE TABLE `address` (
   `longitude` varchar(255) DEFAULT NULL,
   `postal_code` varchar(255) DEFAULT NULL,
   `street` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE
 );
 
 CREATE TABLE `role` (
   `id` bigint(20) NOT NULL,
   `name` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE
 );
 
 
@@ -29,6 +31,7 @@ CREATE TABLE `user` (
   `username` varchar(255) DEFAULT NULL,
   `address_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
+  UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE,
   FOREIGN KEY (`address_id`) REFERENCES address(`id`),
   KEY `FKddefmvbrws3hvl5t0hnnsv8ox` (`address_id`)
 );
@@ -41,6 +44,18 @@ CREATE TABLE `user_roles` (
   FOREIGN KEY (`user_id`) REFERENCES user(`id`),
   FOREIGN KEY (`role_id`) REFERENCES role(`id`)
 );
+
+CREATE TABLE `verification_token` (
+  `id` bigint(20) NOT NULL,
+  `token` VARCHAR(45) NOT NULL,
+  `expiry_date` DATETIME NOT NULL,
+  `user_id` bigint(20) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE,
+  UNIQUE INDEX `token_UNIQUE` (`token` ASC) VISIBLE,
+  FOREIGN KEY (`user_id`) REFERENCES user(`id`)
+);
+
 
 CREATE TABLE `hibernate_sequence` (
   `next_val` bigint(20) DEFAULT NULL

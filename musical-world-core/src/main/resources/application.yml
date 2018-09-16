@@ -1,7 +1,10 @@
 
 spring:
   application:
-    name: MUSICAL-WORLD-BACKEND
+    name: MUSICAL-WORLD-BACKEN
+  mvc:
+    locale: en
+    locale-resolver: fixed
   mail:
     host: smtp.gmail.com
     port: 465

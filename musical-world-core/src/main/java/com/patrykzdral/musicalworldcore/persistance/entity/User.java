@@ -4,17 +4,12 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.util.Collection;
-import java.util.List;
 
-//@Entity
-//@Data
-//@Builder
-//@NoArgsConstructor
 @Entity
 @Builder(toBuilder = true)
 @AllArgsConstructor(access = AccessLevel.PACKAGE)
 @NoArgsConstructor(access = AccessLevel.PACKAGE)
-@Setter(value = AccessLevel.PACKAGE)
+@Setter
 @Getter
 public class User {
 
@@ -56,7 +51,6 @@ public class User {
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
     private Collection<Role> roles;
-
 
 
 }

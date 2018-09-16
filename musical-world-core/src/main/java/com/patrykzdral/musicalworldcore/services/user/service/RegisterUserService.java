@@ -5,4 +5,6 @@ import com.patrykzdral.musicalworldcore.services.user.model.RegisterUserRequestD
 
 public interface RegisterUserService {
     User registerUserAccount(RegisterUserRequestDTO registerUserRequestDTO);
+    String validateVerificationToken(String token);
+    void createVerificationTokenForUser(User user, String token);
 }

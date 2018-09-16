@@ -92,69 +92,6 @@ pipeline {
                 }
             }
         }
-
-       /* stage('Results') {
-            steps {
-                archiveArtifacts artifacts: '*/target/*exec.jar,*/target/failsafe-reports/TEST-*.xml,*/target/surefire-reports/TEST-*.xml', allowEmptyArchive: true
-                junit '*/target/failsafe-reports/TEST-*.xml'
-                junit '*/target/surefire-reports/TEST-*.xml'
-            }
-
-            post {
-                failure {
-                    notifyStarted("Results failed in Jenkins!")
-                }
-            }
-        }
-
-        stage('VPS Deployment') {
-            steps {
-                dir("${WORKSPACE}/scripts/") {
-                    sh 'mkdir -p ../deployment/'
-                    sh 'sudo chown jenkins:jenkins -R ../deployment'
-
-                    sh "chmod +x getJarName.sh"
-                    script {
-                        JAR_NAME = sh(
-                                script: './getJarName.sh',
-                                returnStdout: true
-                        ).trim()
-                    }
-
-                    sh "chmod +x getJarVersion.sh"
-                    script {
-                        JAR_VERSION = sh(
-                                script: "./getJarVersion.sh ${JAR_NAME}",
-                                returnStdout: true
-                        ).trim()
-                    }
-
-                    sh "chmod +x runDeployment.sh"
-                    sh "./runDeployment.sh ${JAR_NAME} ${JAR_VERSION}"
-                }
-            }
-
-            post {
-                failure {
-                    notifyStarted("VPS Deployment failed in Jenkins!")
-                }
-            }
-        } */
-
-        /*   stage('Docker Hub Push') {
-               steps {
-                   dir("${WORKSPACE}/scripts/") {
-                       sh "chmod +x runDockerHubPush.sh"
-                       sh "./runDockerHubPush.sh ${JAR_VERSION}"
-                   }
-               }
-
-               post {
-                   failure {
-                       notifyStarted("Docker Hub Push failed in Jenkins!")
-                   }
-               }
-           }*/
     }
 
     post {

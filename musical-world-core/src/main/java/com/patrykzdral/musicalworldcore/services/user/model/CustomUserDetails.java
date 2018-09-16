@@ -15,7 +15,6 @@ public class CustomUserDetails extends User {
     private String email;
     private boolean rememberMe;
 
-
     public CustomUserDetails(String username, String password,
                              Collection<? extends GrantedAuthority> authorities,
                              String email, boolean rememberMe) {

@@ -29,8 +29,8 @@ pipeline {
         stage('Flyway DB Migration') {
             steps {
                 dir("${WORKSPACE}/musical-world-db-deploy/") {
-                    sh "'${M2_HOME}/bin/mvn'"
-                    sh "'${M2_HOME}/bin/mvn'"
+                    mvn " flyway:clean -P develop"
+                    sh "flyway:migrate -P develop"
                 }
             }
 

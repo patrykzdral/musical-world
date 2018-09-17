@@ -11,6 +11,12 @@ pipeline {
         JAR_NAME = ''
     }
 
+    agent {
+        docker {
+            image 'maven:3.5.4-jdk-10'
+            args '-v /root/.m2:/root/.m2'
+            }
+    }
     stages {
         stage('Fetch') {
             steps {
@@ -29,8 +35,8 @@ pipeline {
         stage('Flyway DB Migration') {
             steps {
                 dir("${WORKSPACE}/musical-world-db-deploy/") {
-                    mvn " flyway:clean -P develop"
-                    sh "flyway:migrate -P develop"
+                    sh "'${M2_HOME}/bin/mvn' flyway:clean -P develop"
+                    sh "'${M2_HOME}/bin/mvn' flyway:migrate -P develop"
                 }
             }
 

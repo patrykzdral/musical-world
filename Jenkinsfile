@@ -43,7 +43,7 @@ pipeline {
 
         stage('Build') {
             steps {
-                sh "'${M2_HOME}/bin/mvn' clean install -Dtest=SomePatternThatDoesntMatchAnything -DskipITs -DfailIfNoTests=false"
+                sh "'${M2_HOME}/bin/mvn' clean install -Pdevelop -Dtest=SomePatternThatDoesntMatchAnything -DskipITs -DfailIfNoTests=false"
             }
 
             post {
@@ -57,7 +57,7 @@ pipeline {
             parallel {
                 stage('unit tests') {
                     steps {
-                        sh "'${M2_HOME}/bin/mvn' surefire:test"
+                        sh "'${M2_HOME}/bin/mvn' -Pdevelop surefire:test"
                     }
 
                     post {
@@ -69,7 +69,7 @@ pipeline {
 
                 stage('integration tests') {
                     steps {
-                        sh "'${M2_HOME}/bin/mvn' failsafe:integration-test -P integration-test-without-smoke-tests"
+                        sh "'${M2_HOME}/bin/mvn' -Pdevelop failsafe:integration-test -P integration-test-without-smoke-tests"
                     }
 
                     post {
@@ -81,7 +81,7 @@ pipeline {
 
                 stage('smoke tests') {
                     steps {
-                        sh "'${M2_HOME}/bin/mvn' failsafe:integration-test -P smoke-tests"
+                        sh "'${M2_HOME}/bin/mvn' -Pdevelop failsafe:integration-test -P smoke-tests"
                     }
 
                     post {

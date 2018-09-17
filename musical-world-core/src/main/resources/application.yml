@@ -42,6 +42,14 @@ server:
 ---
 spring:
   profiles: develop
+  datasource:
+    url: jdbc:mysql://145.239.84.253:3306/musicalworld?useSSL=false&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC
+    username: musicalworlduser
+    password: dnjupgUrX8RQvvo0
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: false
   data:
     rest:
       detection-strategy: annotated

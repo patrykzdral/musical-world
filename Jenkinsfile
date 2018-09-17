@@ -53,7 +53,7 @@ pipeline {
             }
         }
 
-        stage('Tests') {
+        /*stage('Tests') {
             parallel {
                 stage('unit tests') {
                     steps {
@@ -91,7 +91,7 @@ pipeline {
                     }
                 }
             }
-        }
+        }*/
     }
 
     post {

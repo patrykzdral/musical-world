@@ -4,8 +4,6 @@ def notifyStarted(String message) {
 }
 
 pipeline {
-    agent any
-
     environment {
         JAR_VERSION = ''
         JAR_NAME = ''
@@ -15,7 +13,7 @@ pipeline {
         docker {
             image 'maven:3.5.4-jdk-10'
             args '-v /root/.m2:/root/.m2'
-            }
+        }
     }
     stages {
         stage('Fetch') {

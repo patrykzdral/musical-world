@@ -53,7 +53,7 @@ pipeline {
             }
         }
 
-        /*stage('Tests') {
+        stage('Tests') {
             parallel {
                 stage('unit tests') {
                     steps {
@@ -69,7 +69,7 @@ pipeline {
 
                 stage('integration tests') {
                     steps {
-                        sh "'${M2_HOME}/bin/mvn' -Pdevelop failsafe:integration-test -P integration-test-without-smoke-tests"
+                        sh "'${M2_HOME}/bin/mvn' -Pdevelop failsafe:integration-test"
                     }
 
                     post {
@@ -81,7 +81,7 @@ pipeline {
 
                 stage('smoke tests') {
                     steps {
-                        sh "'${M2_HOME}/bin/mvn' -Pdevelop failsafe:integration-test -P smoke-tests"
+                        sh "'${M2_HOME}/bin/mvn' -Pdevelop failsafe:integration-test"
                     }
 
                     post {
@@ -91,7 +91,7 @@ pipeline {
                     }
                 }
             }
-        }*/
+        }
     }
 
     post {

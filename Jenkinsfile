@@ -29,8 +29,8 @@ pipeline {
         stage('Flyway DB Migration') {
             steps {
                 dir("${WORKSPACE}/musical-world-db-deploy/") {
-                    sh 'mvn flyway:clean -P develop'
-                    sh 'mvn flyway:migrate -P develop'
+                    sh "/usr/maven/apache-maven-3.5.4apache-maven-3.5.4/bin/mvn' flyway:clean -P develop"
+                    sh "/usr/maven/apache-maven-3.5.4apache-maven-3.5.4/bin/mvn' flyway:migrate -P develop"
                 }
             }
 

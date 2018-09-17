@@ -4,6 +4,8 @@ def notifyStarted(String message) {
 }
 
 pipeline {
+    agent any
+
     environment {
         JAR_VERSION = ''
         JAR_NAME = ''

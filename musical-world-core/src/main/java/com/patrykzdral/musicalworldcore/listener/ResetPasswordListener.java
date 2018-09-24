@@ -3,6 +3,7 @@ package com.patrykzdral.musicalworldcore.listener;
 import com.patrykzdral.musicalworldcore.persistance.entity.User;
 import com.patrykzdral.musicalworldcore.services.user.exception.InternalException;
 import com.patrykzdral.musicalworldcore.services.user.service.RegisterUserService;
+import com.patrykzdral.musicalworldcore.services.user.service.ResetUserPasswordService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -20,8 +21,8 @@ import java.util.UUID;
 
 @Component
 @Slf4j
-public class RegistrationListener implements ApplicationListener<OnRegistrationCompleteEvent> {
-    private final RegisterUserService service;
+public class ResetPasswordListener implements ApplicationListener<OnResetPasswordEvent> {
+    private final ResetUserPasswordService resetUserPasswordService;
 
     private final MessageSource messages;
 
@@ -30,37 +31,38 @@ public class RegistrationListener implements ApplicationListener<OnRegistrationC
     private final Environment env;
 
     @Autowired
-    public RegistrationListener(Environment env, JavaMailSender mailSender, @Qualifier("messageSource") MessageSource messages, RegisterUserService service) {
+    public ResetPasswordListener(Environment env, JavaMailSender mailSender, @Qualifier("messageSource") MessageSource messages, ResetUserPasswordService resetUserPasswordService) {
         this.env = env;
         this.mailSender = mailSender;
         this.messages = messages;
-        this.service = service;
+        this.resetUserPasswordService = resetUserPasswordService;
     }
 
     @Override
-    public void onApplicationEvent(final OnRegistrationCompleteEvent event) {
+    public void onApplicationEvent(final OnResetPasswordEvent event) {
         try {
-            this.confirmRegistration(event);
+            this.resetPassword(event);
         } catch (MessagingException e) {
             throw new InternalException("Sending mail error", e.getMessage());
         }
     }
 
-    private void confirmRegistration(final OnRegistrationCompleteEvent event) throws MessagingException {
+    private void resetPassword(final OnResetPasswordEvent event) throws MessagingException {
         final User user = event.getUser();
         final String token = UUID.randomUUID().toString();
-        service.createVerificationTokenForUser(user, token);
+        resetUserPasswordService.createPasswordResetTokenForUser(user, token);
 
         final MimeMessage email = constructEmailMessage(event, user, token);
         mailSender.send(email);
     }
 
 
-    private MimeMessage constructEmailMessage(final OnRegistrationCompleteEvent event, final User user, final String token) throws MessagingException {
+    private MimeMessage constructEmailMessage(final OnResetPasswordEvent event, final User user, final String token) throws MessagingException {
+        String username = user.getUsername();
         final String recipientAddress = user.getEmail();
-        final String subject = "Registration Confirmation";
-        final String confirmationUrl = event.getAppUrl() + "/registrationConfirm?token=" + token;
-        log.info(confirmationUrl);
+        final String subject = "Reset Password";
+        final String resetPasswordUrl = event.getAppUrl() + "/updatePassword?token=" + token;
+        log.info(resetPasswordUrl);
         //final String message = messages.getMessage("message sent", null, event.getLocale());
         MimeMessage message = mailSender.createMimeMessage();
 
@@ -71,20 +73,18 @@ public class RegistrationListener implements ApplicationListener<OnRegistrationC
         helper.setText(
                 "<html>"
                         + "<body>"
-                        + "<div>Dear User,"
-                        + "<div><strong>please confirm registration using link below: </strong> <br/><br/></div>"
+                        + "<div>Dear "+username+","
+                        + "<div><strong>This email has been sent to reset your password: </strong> <br/><br/></div>"
                         + "<div>"
-                        + "<a href=" + confirmationUrl + "><img src='cid:link' style='float:center;'/>"
+                        + "<a href=" + resetPasswordUrl + "><img src='cid:link' style='float:center;'/>"
                         + "<br/><br/></div>"
-                        + "<div>We hope you will use the app with pleasure!</div>"
                         + "<div>Thanks,</div>"
                         + "Musical world team"
                         + "</div></body>"
                         + "</html>", true);
         helper.addInline("link",
-                new File("C:/Users/pzdral/Desktop/inżynierka/musical-world/musical-world-core/src/main/resources/register.png"));
+                new File("C:/Users/pzdral/Desktop/inżynierka/musical-world/musical-world-core/src/main/resources/reset.png"));
         helper.setFrom(env.getProperty("spring.mail.host"));
         return message;
     }
-
 }

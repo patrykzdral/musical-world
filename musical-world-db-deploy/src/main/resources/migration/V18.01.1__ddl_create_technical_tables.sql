@@ -55,7 +55,16 @@ CREATE TABLE `verification_token` (
   UNIQUE INDEX `token_UNIQUE` (`token` ASC) VISIBLE,
   FOREIGN KEY (`user_id`) REFERENCES user(`id`)
 );
-
+CREATE TABLE `password_reset_token` (
+  `id` bigint(20) NOT NULL,
+  `token` VARCHAR(45) NOT NULL,
+  `expiry_date` DATETIME NOT NULL,
+  `user_id` bigint(20) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE,
+  UNIQUE INDEX `token_UNIQUE` (`token` ASC) VISIBLE,
+  FOREIGN KEY (`user_id`) REFERENCES user(`id`)
+);
 
 CREATE TABLE `hibernate_sequence` (
   `next_val` bigint(20) DEFAULT NULL

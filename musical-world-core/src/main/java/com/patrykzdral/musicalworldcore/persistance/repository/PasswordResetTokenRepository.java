@@ -1,10 +1,9 @@
 package com.patrykzdral.musicalworldcore.persistance.repository;
 
-import com.patrykzdral.musicalworldcore.persistance.entity.Role;
+import com.patrykzdral.musicalworldcore.persistance.entity.PasswordResetToken;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface RoleRepository extends CrudRepository<Role, Long> {
-    Role findByName(String name);
+public interface PasswordResetTokenRepository extends CrudRepository<PasswordResetToken, Long> {
 }

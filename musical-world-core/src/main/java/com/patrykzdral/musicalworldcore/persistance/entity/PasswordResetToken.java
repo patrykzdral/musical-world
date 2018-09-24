@@ -14,8 +14,9 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Table(name = "verification_token")
-public class VerificationToken {
+@Table(name = "password_reset_token")
+public class PasswordResetToken {
+
     private static final int EXPIRATION = 60 * 24;
 
     @Id
@@ -32,16 +33,17 @@ public class VerificationToken {
     @Column(name = "expiry_date")
     private Date expiryDate;
 
-    public VerificationToken(final String token, final User user) {
+    public PasswordResetToken(String token, User user) {
         this.token = token;
         this.user = user;
         this.expiryDate = calculateExpiryDate();
+
     }
 
     private Date calculateExpiryDate() {
         final Calendar cal = Calendar.getInstance();
         cal.setTimeInMillis(new Date().getTime());
-        cal.add(Calendar.MINUTE, VerificationToken.EXPIRATION);
+        cal.add(Calendar.MINUTE, PasswordResetToken.EXPIRATION);
         return new Date(cal.getTime().getTime());
     }
 
@@ -49,4 +51,5 @@ public class VerificationToken {
         this.token = token;
         this.expiryDate = calculateExpiryDate();
     }
+
 }

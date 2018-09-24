@@ -60,15 +60,15 @@ public class Ouath2ServerConfig extends AuthorizationServerConfigurerAdapter {
 
     @Override
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
-//        clients.jdbc(dataSource);
-        clients.jdbc(dataSource)
-                .passwordEncoder(passwordEncoder)
-                .withClient("client")
-                .secret("secret")
-                .authorizedGrantTypes("password", "authorization_code", "client_credentials")
-                .scopes("read", "write", "trust")
-                .accessTokenValiditySeconds(15 * 60)
-                .refreshTokenValiditySeconds(30 * 24 * 60 * 60);
+        clients.jdbc(dataSource);
+//        clients.jdbc(dataSource)
+//                .passwordEncoder(passwordEncoder)
+//                .withClient("patrykzdral")
+//                .secret("verysecretpassword")
+//                .authorizedGrantTypes("password", "authorization_code", "client_credentials")
+//                .scopes("read", "write", "trust")
+//                .accessTokenValiditySeconds(15 * 60)
+//                .refreshTokenValiditySeconds(30 * 24 * 60 * 60);
     }
 
     @Override

@@ -4,6 +4,8 @@ import com.patrykzdral.musicalworldcore.persistance.repository.UserRepository;
 import com.patrykzdral.musicalworldcore.services.user.model.CustomUserDetails;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -13,10 +15,14 @@ import org.springframework.stereotype.Service;
 import java.util.stream.Collectors;
 
 @Service
-@AllArgsConstructor
 @Slf4j
 public class CustomUserDetailsService implements UserDetailsService {
     private final UserRepository userRepository;
+
+    @Autowired
+    public CustomUserDetailsService(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -34,8 +40,8 @@ public class CustomUserDetailsService implements UserDetailsService {
                                 .collect(Collectors.toList()),
                         user.getEmail(),
                         user.isRememberMe())
-                ).orElseThrow(() -> new UsernameNotFoundException("User with the name"
-                        + username + "not found in the database"));
+                ).orElseThrow(() -> new UsernameNotFoundException("User with the name "
+                        + username + " not found in the database"));
 
     }
 }

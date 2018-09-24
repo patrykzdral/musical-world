@@ -7,4 +7,5 @@ public interface RegisterUserService {
     User registerUserAccount(RegisterUserRequestDTO registerUserRequestDTO);
     String validateVerificationToken(String token);
     void createVerificationTokenForUser(User user, String token);
+
 }

@@ -13,7 +13,7 @@ import javax.validation.constraints.Size;
 
 @Value
 @Builder
-@PasswordMatches
+//@PasswordMatches
 public class RegisterUserRequestDTO {
     @NotNull
     private String username;
@@ -23,21 +23,33 @@ public class RegisterUserRequestDTO {
     @Size(min = 4)
     private String email;
 
-    @ValidPassword
+    //@ValidPassword
     @Size(min = 4)
     private String password;
 
     @NotNull
     private String matchingPassword;
 
+    private String phoneNumber;
+
+    private String firstName;
+
+    private String LastName;
+
     @JsonCreator
     public RegisterUserRequestDTO(@JsonProperty("username") String username,
                                   @JsonProperty("email") String email,
                                   @JsonProperty("password") String password,
-                                  @JsonProperty("matchingPassword") String matchingPassword) {
+                                  @JsonProperty("matchingPassword") String matchingPassword,
+                                  @JsonProperty("phoneNumber") String phoneNumber,
+                                  @JsonProperty("firstName") String firstName,
+                                  @JsonProperty("lastName")String lastName) {
         this.username = username;
         this.email = email;
         this.password = password;
         this.matchingPassword = matchingPassword;
+        this.phoneNumber = phoneNumber;
+        this.firstName = firstName;
+        LastName = lastName;
     }
 }

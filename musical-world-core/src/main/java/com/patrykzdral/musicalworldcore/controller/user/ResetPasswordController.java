@@ -1,4 +1,4 @@
-package com.patrykzdral.musicalworldcore.services.user.controller;
+package com.patrykzdral.musicalworldcore.controller.user;
 
 import com.patrykzdral.musicalworldcore.listener.OnResetPasswordEvent;
 import com.patrykzdral.musicalworldcore.persistance.entity.User;
@@ -47,10 +47,10 @@ public class ResetPasswordController {
     }
 
 //    @RequestMapping(value = "/user/changePassword", method = RequestMethod.GET)
-//    public String showChangePasswordPage(final Locale locale, final Model model, @RequestParam("id") final long id, @RequestParam("token") final String token) {
+//    public String showChangePasswordPage(final Locale locale, final Model dto, @RequestParam("id") final long id, @RequestParam("token") final String token) {
 //        final String result = securityUserService.validatePasswordResetToken(id, token);
 //        if (result != null) {
-//            model.addAttribute("message", messages.getMessage("auth.message." + result, null, locale));
+//            dto.addAttribute("message", messages.getMessage("auth.message." + result, null, locale));
 //            return "redirect:/login?lang=" + locale.getLanguage();
 //        }
 //        return "redirect:/updatePassword.html?lang=" + locale.getLanguage();

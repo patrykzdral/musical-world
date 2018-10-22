@@ -1,7 +1,7 @@
 
 spring:
   application:
-    name: MUSICAL-WORLD-BACKEN
+    name: MUSICAL-WORLD-BACKEND
   mvc:
     locale: en
     locale-resolver: fixed
@@ -24,7 +24,7 @@ spring:
 spring:
   profiles: default
   datasource:
-    url: jdbc:mysql://127.0.0.1:3306/musician_world?useSSL=false&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC
+    url: jdbc:mysql://127.0.0.1:3306/musical_world?useSSL=false&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC
     username: root
     password: root
   jpa:
@@ -43,7 +43,7 @@ server:
 spring:
   profiles: develop
   datasource:
-    url: jdbc:mysql://145.239.84.253:3306/musicalworld?useSSL=false&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC
+    url: jdbc:mysql://145.239.84.253:3306/musical_world?useSSL=false&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC
     username: musicalworlduser
     password: dnjupgUrX8RQvvo0
   jpa:
@@ -62,7 +62,7 @@ server:
 spring:
   profiles: local
   datasource:
-    url: jdbc:mysql://127.0.0.1:3306/musician_world?useSSL=false&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC
+    url: jdbc:mysql://127.0.0.1:3306/musical_world?useSSL=false&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC
     username: root
     password: root
   jpa:

@@ -1,4 +1,4 @@
-package com.patrykzdral.musicalworldcore.services.user.controller;
+package com.patrykzdral.musicalworldcore.controller.user;
 
 import com.patrykzdral.musicalworldcore.listener.OnRegistrationCompleteEvent;
 import com.patrykzdral.musicalworldcore.listener.OnResetPasswordEvent;
@@ -51,7 +51,7 @@ public class RegistrationController {
         if (result.equals("valid")) {
             return "redirect:/console.html?lang=" + locale.getLanguage();
         }
-        //model.addAttribute("message", messages.getMessage("auth.message." + result, null, locale));
+        //dto.addAttribute("message", messages.getMessage("auth.message." + result, null, locale));
         model.addAttribute("expired", "expired".equals(result));
         model.addAttribute("token", token);
         return "redirect:/badUser.html?lang=" + locale.getLanguage();

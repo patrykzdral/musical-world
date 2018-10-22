@@ -1,18 +1,17 @@
 package com.patrykzdral.musicalworldcore.persistance.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
-import java.util.Collection;
 
 @Entity
 @Data
-@Builder
 @NoArgsConstructor
-@AllArgsConstructor
-public class Role {
-
+@Getter
+@Setter
+@ToString
+@EqualsAndHashCode
+public class Instrument {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -20,8 +19,7 @@ public class Role {
     @Column(name = "name")
     private String name;
 
-    @ManyToMany(mappedBy = "roles")
-    @JsonIgnore
-    private Collection<User> users;
-
+    @ManyToOne
+    @JoinColumn(name = "type_id")
+    private Type type;
 }

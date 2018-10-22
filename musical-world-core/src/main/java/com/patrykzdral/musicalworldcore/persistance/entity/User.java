@@ -14,7 +14,7 @@ import java.util.Collection;
 public class User {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "username")
@@ -25,6 +25,9 @@ public class User {
 
     @Column(name = "email")
     private String email;
+
+    @Column(name = "description")
+    private String description;
 
     @Column(name = "phone_number")
     private String phoneNumber;

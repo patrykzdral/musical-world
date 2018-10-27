@@ -1,14 +1,17 @@
 package com.patrykzdral.musicalworldcore.persistance.entity;
 
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 
 @Entity
-@Table(name = "concert_application")
-@Data
+@Builder
 @NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
+@ToString
+@EqualsAndHashCode
 public class ConcertApplication {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

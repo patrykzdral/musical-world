@@ -10,9 +10,11 @@ import javax.persistence.*;
 @AllArgsConstructor
 @Setter
 @EqualsAndHashCode
+@ToString
 public class ConcertInstrumentSlot {
 
     @Id
+    @Getter
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
@@ -30,5 +32,6 @@ public class ConcertInstrumentSlot {
     @JoinColumn(name = "user_id")
     private User user;
 
+    @Getter
     boolean taken;
 }

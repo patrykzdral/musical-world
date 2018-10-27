@@ -13,8 +13,11 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
 @RestController
@@ -39,6 +42,7 @@ public class ConcertController {
     @ResponseStatus(HttpStatus.CREATED)
     public void createConcert(@Valid @RequestBody ConcertDTO request,
                                     HttpServletRequest httpServletRequest, Locale locale) {
+        log.info(request.getDateFrom().toString());
         log.info(request.toString());
         log.info(httpServletRequest.toString());
         log.info(locale.toString());
@@ -56,7 +60,50 @@ public class ConcertController {
 
     }
 
+    @GetMapping(value= "/not-user", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(HttpStatus.OK)
+    public List<ConcertDTOG> getAllNotUserConcerts(@RequestParam String name) {
+        List<Concert> concerts = concertService.findAllNotUserEvents(name);
+        log.info(concerts.toString());
+        return concerts.stream()
+                .map(this::convertToDto)
+                .collect(Collectors.toList());
+
+    }
+
+    @GetMapping(value= "/filtered", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(HttpStatus.OK)
+    public List<ConcertDTOG> getFilteredConcerts(@RequestParam(value = "name",required = false) String name ,
+                                                 @RequestParam(value = "dateFrom",required = false) Date dateFrom ,
+                                                 @RequestParam(value = "dateTo", required = false) Date dateTo) {
+        log.info(dateFrom.toString());
+        log.info(dateTo.toString());
+        List<Concert> concerts = concertService.filterConcerts(name,null,dateFrom,dateTo);
+        log.info(concerts.toString());
+        return concerts.stream()
+                .map(this::convertToDto)
+                .collect(Collectors.toList());
+
+    }
+
+    @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(HttpStatus.OK)
+    public ConcertDTOG getOneConcert(@PathVariable("id") Long id) {
+        var concertDTO = new Object() {
+            ConcertDTOG concert=null;
+        };
+        Optional<Concert> concerts = concertService.findOne(id);
+        concerts.ifPresentOrElse(concert -> {concertDTO.concert=convertToDto(concert);},
+        () -> {
+
+        });
+        log.info(concerts.toString());
+        return concertDTO.concert;
+
+    }
+
     private ConcertDTOG convertToDto(Concert concert) {
+        log.info(modelMapper.map(concert, ConcertDTOG.class).toString());
         return modelMapper.map(concert, ConcertDTOG.class);
     }
 }

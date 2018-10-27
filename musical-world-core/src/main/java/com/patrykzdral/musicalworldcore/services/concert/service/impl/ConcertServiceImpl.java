@@ -9,8 +9,8 @@ import com.patrykzdral.musicalworldcore.persistance.repository.ConcertRepository
 import com.patrykzdral.musicalworldcore.persistance.repository.InstrumentRepository;
 import com.patrykzdral.musicalworldcore.persistance.repository.UserRepository;
 import com.patrykzdral.musicalworldcore.services.concert.dto.ConcertDTO;
-import com.patrykzdral.musicalworldcore.services.concert.service.ConcertInstrumentSlotService;
 import com.patrykzdral.musicalworldcore.services.concert.service.ConcertService;
+import com.patrykzdral.musicalworldcore.services.instrument.dto.InstrumentDTO;
 import com.patrykzdral.musicalworldcore.services.user.exception.InternalException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,8 +18,10 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 @Service
@@ -45,6 +47,43 @@ public class ConcertServiceImpl implements ConcertService {
     }
 
     @Override
+    public List<Concert> findAllNotUserEvents(String name) {
+        return concertRepository.findAllNotUserConcerts(name);
+    }
+
+    @Override
+    public Optional<Concert> findOne(Long id) {
+        return concertRepository.findById(id);
+    }
+
+    @Override
+    public List<Concert> filterConcerts(String name, List<InstrumentDTO> instruments, Date dateFrom, Date dateTo) {
+        List<Concert> filteredConcerts = concertRepository.findAll();
+        if(name!=null) filteredConcerts = filteredConcerts.stream().filter(concert -> concert
+                .getName()
+                .equals(name))
+                .collect(Collectors.toList());
+        if(dateFrom!=null) filteredConcerts = filteredConcerts.stream().filter(filteredConcert-> filteredConcert.getDateFrom().after(dateFrom)).collect(Collectors.toList());
+        if(dateTo!=null) filteredConcerts = filteredConcerts.stream().filter(filteredConcert-> filteredConcert.getDateTo().before(dateTo)).collect(Collectors.toList());
+//        if(instruments!=null){
+//            filteredConcerts
+//        }
+
+//        if(instruments!=null)filteredConcerts = filteredConcerts
+//                .forEach(
+//                concert -> concert.getConcertInstrumentSlots()
+//                        .for
+//        );
+
+//                .stream()
+//                .filter(concert ->concert.getConcertInstrumentSlots()
+//                        .forEach(concertInstrumentSlot -> instruments
+//                                .forEach(instrument -> instrument.getName().equals(concertInstrumentSlot.getInstrument().getName()))));
+//        allConcerts.
+        return filteredConcerts;
+    }
+
+    @Override
     @Transactional
     public Concert save(ConcertDTO concert) {
         User user;
@@ -52,8 +91,6 @@ public class ConcertServiceImpl implements ConcertService {
         if(!optionalUser.isPresent()){
             throw new InternalException("Creation exception", "User does not exists");
         }
-        List<ConcertInstrumentSlot> concertInstrumentSlots = new ArrayList<>();
-
         user=optionalUser.get();
         Concert concertToSave = Concert.builder()
                 .name(concert.getName())
@@ -91,5 +128,8 @@ public class ConcertServiceImpl implements ConcertService {
                 });
         return concertRepository.save(concertToSave);
     }
+
+
+
 
 }

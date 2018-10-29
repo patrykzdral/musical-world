@@ -11,6 +11,24 @@ CREATE TABLE `address` (
   UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE
 );
 
+CREATE TABLE `type` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(45) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE
+);
+
+CREATE TABLE `picture` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(45),
+  `file_name` VARCHAR(45),
+  `creation_date` DATETIME,
+  `type_id` bigint(20),
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE,
+  FOREIGN KEY (`type_id`) REFERENCES type(`id`)
+);
+
 CREATE TABLE `role` (
   `id` bigint(20) NOT NULL,
   `name` varchar(255) DEFAULT NULL,
@@ -31,10 +49,12 @@ CREATE TABLE `user` (
   `to_be_deleted` bit(1) DEFAULT NULL,
   `username` varchar(255) DEFAULT NULL,
   `address_id` bigint(20) DEFAULT NULL,
+  `picture_id` bigint(20) DEFAULT NULL,
   `description` varchar(500) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE,
   FOREIGN KEY (`address_id`) REFERENCES address(`id`),
+  FOREIGN KEY (`picture_id`) REFERENCES picture(`id`),
   KEY `FKddefmvbrws3hvl5t0hnnsv8ox` (`address_id`)
 );
 
@@ -110,12 +130,7 @@ CREATE TABLE `friendship` (
 
 
 
-CREATE TABLE `type` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `name` VARCHAR(45) NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE
-);
+
 
 CREATE TABLE `instrument` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
@@ -161,14 +176,7 @@ CREATE TABLE `orchestra_member` (
   FOREIGN KEY (`orchestra_id`) REFERENCES orchestra(`id`),
   FOREIGN KEY (`instrument_id`) REFERENCES instrument(`id`)
 );
-CREATE TABLE `picture` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `name` VARCHAR(45) NOT NULL,
-  `type_id` bigint(20) NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE,
-  FOREIGN KEY (`type_id`) REFERENCES type(`id`)
-);
+
 
 CREATE TABLE `hibernate_sequence` (
   `next_val` bigint(20) DEFAULT NULL

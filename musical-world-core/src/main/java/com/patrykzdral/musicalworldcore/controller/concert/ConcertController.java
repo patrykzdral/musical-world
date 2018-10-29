@@ -3,16 +3,21 @@ package com.patrykzdral.musicalworldcore.controller.concert;
 import com.patrykzdral.musicalworldcore.persistance.entity.Concert;
 import com.patrykzdral.musicalworldcore.services.concert.dto.ConcertDTO;
 import com.patrykzdral.musicalworldcore.services.concert.dto.get_dto.ConcertDTOG;
+import com.patrykzdral.musicalworldcore.services.concert.dto.get_dto.FilteredDataDTO;
 import com.patrykzdral.musicalworldcore.services.concert.service.ConcertService;
+import com.patrykzdral.musicalworldcore.services.instrument.dto.InstrumentDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -42,8 +47,6 @@ public class ConcertController {
     @ResponseStatus(HttpStatus.CREATED)
     public void createConcert(@Valid @RequestBody ConcertDTO request,
                                     HttpServletRequest httpServletRequest, Locale locale) {
-        log.info(request.getDateFrom().toString());
-        log.info(request.toString());
         log.info(httpServletRequest.toString());
         log.info(locale.toString());
         concertService.save(request);
@@ -74,17 +77,29 @@ public class ConcertController {
     @GetMapping(value= "/filtered", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
     public List<ConcertDTOG> getFilteredConcerts(@RequestParam(value = "name",required = false) String name ,
-                                                 @RequestParam(value = "dateFrom",required = false) Date dateFrom ,
+                                                 @RequestParam(value = "instruments", required=false) List<InstrumentDTO> instruments,
+                                                 @RequestParam(value = "dateFrom",required = false)  Date dateFrom,
                                                  @RequestParam(value = "dateTo", required = false) Date dateTo) {
-        log.info(dateFrom.toString());
-        log.info(dateTo.toString());
-        List<Concert> concerts = concertService.filterConcerts(name,null,dateFrom,dateTo);
-        log.info(concerts.toString());
+        List<Concert> concerts = concertService.filterConcerts(name,instruments,dateFrom,dateTo);
         return concerts.stream()
                 .map(this::convertToDto)
                 .collect(Collectors.toList());
 
     }
+
+//    @GetMapping(value= "/filtered", produces = MediaType.APPLICATION_JSON_VALUE)
+//    @ResponseStatus(HttpStatus.OK)
+//    public List<ConcertDTOG> getFilteredConcerts(@RequestParam(value = "filterData",required = false)FilteredDataDTO filteredData) {
+////        DateTimeFormatter format = DateTimeFormatter.;
+////        Date dateFromm = Date.
+////        log.info(dateFromm.toString());
+//        List<Concert> concerts = concertService.filterConcerts(filteredData.getName(),null,
+//                filteredData.getDateFrom(),filteredData.getDateTo());
+//        return concerts.stream()
+//                .map(this::convertToDto)
+//                .collect(Collectors.toList());
+
+//    }
 
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)

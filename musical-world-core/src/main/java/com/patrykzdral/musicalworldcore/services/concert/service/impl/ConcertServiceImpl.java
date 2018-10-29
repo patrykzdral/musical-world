@@ -64,11 +64,11 @@ public class ConcertServiceImpl implements ConcertService {
                 .equals(name))
                 .collect(Collectors.toList());
         if(dateFrom!=null) filteredConcerts = filteredConcerts.stream().filter(filteredConcert-> filteredConcert.getDateFrom().after(dateFrom)).collect(Collectors.toList());
-        if(dateTo!=null) filteredConcerts = filteredConcerts.stream().filter(filteredConcert-> filteredConcert.getDateTo().before(dateTo)).collect(Collectors.toList());
-//        if(instruments!=null){
-//            filteredConcerts
-//        }
-
+        if(dateTo!=null) filteredConcerts = filteredConcerts.stream().filter(filteredConcert-> filteredConcert.getDateFrom().before(dateTo)).collect(Collectors.toList());
+        if(instruments!=null) filteredConcerts= filteredConcerts
+                .stream()
+                .filter(concert -> filterConcert(concert,instruments))
+                .collect(Collectors.toList());
 //        if(instruments!=null)filteredConcerts = filteredConcerts
 //                .forEach(
 //                concert -> concert.getConcertInstrumentSlots()
@@ -81,6 +81,13 @@ public class ConcertServiceImpl implements ConcertService {
 //                                .forEach(instrument -> instrument.getName().equals(concertInstrumentSlot.getInstrument().getName()))));
 //        allConcerts.
         return filteredConcerts;
+    }
+    static boolean filterConcert(Concert concert,List<InstrumentDTO> instruments){
+        return concert.getConcertInstrumentSlots().stream().anyMatch(
+                concertInstrumentSlot -> instruments
+                        .stream()
+                        .anyMatch(instrumentDTO -> instrumentDTO.getName().equals(concertInstrumentSlot.getInstrument().getName()))
+        );
     }
 
     @Override

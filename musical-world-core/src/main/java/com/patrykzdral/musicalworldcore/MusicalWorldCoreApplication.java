@@ -12,9 +12,7 @@ import java.util.Locale;
 @SpringBootApplication
 @Slf4j
 public class MusicalWorldCoreApplication {
-
     public static void main(String[] args) {
         SpringApplication.run(MusicalWorldCoreApplication.class, args);
     }
-
 }

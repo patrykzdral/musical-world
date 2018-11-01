@@ -108,7 +108,7 @@ public class ConcertController {
             ConcertDTOG concert=null;
         };
         Optional<Concert> concerts = concertService.findOne(id);
-        concerts.ifPresentOrElse(concert -> {concertDTO.concert=convertToDto(concert);},
+        concerts.ifPresentOrElse(concert -> concertDTO.concert=convertToDto(concert),
         () -> {
 
         });

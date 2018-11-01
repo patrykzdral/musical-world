@@ -37,6 +37,7 @@ public class RegistrationController {
     @ResponseBody
     public ResponseEntity<Object> save(@Valid @RequestBody RegisterUserRequestDTO registerUserRequestDTO, final HttpServletRequest request) {
         User user = registerUserService.registerUserAccount(registerUserRequestDTO);
+        log.info("CHUJ" + user.toString());
         log.info(getAppUrl(request));
         eventPublisher.publishEvent(new OnRegistrationCompleteEvent(user, request.getLocale(), getAppUrl(request)));
         return ResponseEntity.ok(user);

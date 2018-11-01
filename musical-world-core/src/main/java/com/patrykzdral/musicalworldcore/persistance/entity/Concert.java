@@ -8,7 +8,7 @@ import java.util.Date;
 import java.util.List;
 
 @Entity
-@Builder
+@Builder(toBuilder = true)
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
@@ -41,7 +41,7 @@ public class Concert {
 
     public boolean guaranteedMeal;
 
-    @OneToMany(mappedBy = "concert")
+    @OneToMany(mappedBy = "concert", cascade = {CascadeType.ALL})
     List<ConcertInstrumentSlot> concertInstrumentSlots;
 
 

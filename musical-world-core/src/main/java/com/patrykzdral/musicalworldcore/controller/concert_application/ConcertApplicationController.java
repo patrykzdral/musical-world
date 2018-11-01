@@ -1,5 +1,6 @@
 package com.patrykzdral.musicalworldcore.controller.concert_application;
 
+import com.patrykzdral.musicalworldcore.persistance.entity.ConcertApplication;
 import com.patrykzdral.musicalworldcore.services.concert.dto.ConcertDTO;
 import com.patrykzdral.musicalworldcore.services.concert.service.ConcertService;
 import com.patrykzdral.musicalworldcore.services.concert_application.dto.ConcertApplicationDTO;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.util.List;
 import java.util.Locale;
 
 @RestController
@@ -37,4 +39,11 @@ public class ConcertApplicationController {
         log.info(locale.toString());
         concertApplicationService.save(request);
     }
+
+    @GetMapping(value = "/list/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(HttpStatus.OK)
+    public List<ConcertApplication> getApplications(@PathVariable Long id) {
+        return concertApplicationService.getConcertApplications(id);
+    }
+
 }

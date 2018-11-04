@@ -111,10 +111,12 @@ CREATE TABLE `concert` (
   `number_of_rehearsals` bigint(20) DEFAULT 0,
   `ensured_drive` bit(1) DEFAULT b'0',
   `guaranteed_meal` bit(1) DEFAULT b'0',
+  `picture_id` bigint(20) NULL,
   PRIMARY KEY (`id`),
   UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE,
   FOREIGN KEY (`owner_id`) REFERENCES user(`id`),
-  FOREIGN KEY (`address_id`) REFERENCES address(`id`)
+  FOREIGN KEY (`address_id`) REFERENCES address(`id`),
+  FOREIGN KEY (`picture_id`) REFERENCES picture(`id`)
 );
 
 CREATE TABLE `friendship` (
@@ -130,8 +132,6 @@ CREATE TABLE `friendship` (
 
 
 
-
-
 CREATE TABLE `instrument` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(45) NOT NULL,
@@ -139,6 +139,17 @@ CREATE TABLE `instrument` (
   PRIMARY KEY (`id`),
   UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE,
   FOREIGN KEY (`type_id`) REFERENCES type(`id`)
+);
+
+CREATE TABLE `message` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `user_id` bigint(45) NOT NULL,
+  `another_user_id` bigint(20) NOT NULL,
+  `text` VARCHAR(300) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE,
+  FOREIGN KEY (`user_id`) REFERENCES user(`id`),
+  FOREIGN KEY (`another_user_id`) REFERENCES user(`id`)
 );
 
 CREATE TABLE `concert_instrument_slot` (
@@ -175,6 +186,16 @@ CREATE TABLE `orchestra_member` (
   FOREIGN KEY (`user_id`) REFERENCES user(`id`),
   FOREIGN KEY (`orchestra_id`) REFERENCES orchestra(`id`),
   FOREIGN KEY (`instrument_id`) REFERENCES instrument(`id`)
+);
+
+CREATE TABLE `user_reference` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `user_id` bigint(20) NOT NULL,
+  `text` VARCHAR(300) NOT NULL,
+  `star_rating` bigint(20) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE,
+  FOREIGN KEY (`user_id`) REFERENCES user(`id`)
 );
 
 

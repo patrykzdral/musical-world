@@ -1,7 +1,7 @@
 package com.patrykzdral.musicalworldcore.listener;
 
 import com.patrykzdral.musicalworldcore.persistance.entity.User;
-import com.patrykzdral.musicalworldcore.services.user.exception.InternalException;
+import com.patrykzdral.musicalworldcore.validation.exception.InternalException;
 import com.patrykzdral.musicalworldcore.services.user.service.RegisterUserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,7 +59,7 @@ public class RegistrationListener implements ApplicationListener<OnRegistrationC
     private MimeMessage constructEmailMessage(final OnRegistrationCompleteEvent event, final User user, final String token) throws MessagingException {
         final String recipientAddress = user.getEmail();
         final String subject = "Registration Confirmation";
-        final String confirmationUrl = event.getAppUrl() + "/registrationConfirm?token=" + token;
+        final String confirmationUrl = "http://localhost:4200/#/auth/registration-confirm?token=" + token;
         log.info(confirmationUrl);
         //final String message = messages.getMessage("message sent", null, event.getLocale());
         MimeMessage message = mailSender.createMimeMessage();

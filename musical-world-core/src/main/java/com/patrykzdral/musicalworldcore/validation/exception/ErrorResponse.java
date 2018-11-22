@@ -1,4 +1,4 @@
-package com.patrykzdral.musicalworldcore.services.user.exception;
+package com.patrykzdral.musicalworldcore.validation.exception;
 
 import lombok.Data;
 

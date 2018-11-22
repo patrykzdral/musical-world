@@ -1,7 +1,7 @@
 package com.patrykzdral.musicalworldcore.validation;
 
 import com.google.common.base.Joiner;
-import com.patrykzdral.musicalworldcore.services.user.exception.InternalException;
+import com.patrykzdral.musicalworldcore.validation.exception.InternalException;
 import lombok.extern.slf4j.Slf4j;
 import org.passay.*;
 

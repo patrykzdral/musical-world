@@ -5,7 +5,7 @@ import com.patrykzdral.musicalworldcore.persistance.entity.VerificationToken;
 import com.patrykzdral.musicalworldcore.persistance.repository.RoleRepository;
 import com.patrykzdral.musicalworldcore.persistance.repository.VerificationTokenRepository;
 import com.patrykzdral.musicalworldcore.persistance.repository.UserRepository;
-import com.patrykzdral.musicalworldcore.services.user.exception.InternalException;
+import com.patrykzdral.musicalworldcore.validation.exception.InternalException;
 import com.patrykzdral.musicalworldcore.services.user.model.RegisterUserRequestDTO;
 import com.patrykzdral.musicalworldcore.services.user.service.RegisterUserService;
 import com.patrykzdral.musicalworldcore.services.user.service.impl.RegisterUserServiceImpl;

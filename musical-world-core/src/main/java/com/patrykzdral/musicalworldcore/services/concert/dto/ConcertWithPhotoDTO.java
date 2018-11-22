@@ -1,8 +1,10 @@
 package com.patrykzdral.musicalworldcore.services.concert.dto;
 
-import lombok.*;
-import org.springframework.web.multipart.MultipartFile;
-import javax.mail.Multipart;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import java.util.Date;
 import java.util.List;
 
@@ -10,7 +12,8 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ConcertDTO {
+public class ConcertWithPhotoDTO {
+
     private String username;
     private String name;
     private String description;
@@ -21,5 +24,5 @@ public class ConcertDTO {
     private Long numberOfRehearsals;
     private boolean ensuredDrive;
     private boolean guaranteedMeal;
-    private String pictureName;
+    private String picture;
 }

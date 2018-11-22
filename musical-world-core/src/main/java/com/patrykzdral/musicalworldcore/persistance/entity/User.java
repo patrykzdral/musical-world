@@ -53,7 +53,7 @@ public class User {
     @JoinColumn(name = "address_id")
     private Address address;
 
-    @ManyToOne
+    @ManyToOne(cascade = {CascadeType.ALL})
     @JoinColumn(name = "picture_id")
     private Picture picture;
 

@@ -35,6 +35,10 @@ public class Concert {
     @JoinColumn(name = "owner_id")
     private User user;
 
+    @ManyToOne
+    @JoinColumn(name = "picture_id")
+    private Picture picture;
+
     private Long numberOfRehearsals;
 
     public boolean ensuredDrive;

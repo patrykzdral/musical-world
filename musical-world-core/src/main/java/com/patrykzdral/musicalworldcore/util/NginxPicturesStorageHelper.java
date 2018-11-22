@@ -1,7 +1,7 @@
 package com.patrykzdral.musicalworldcore.util;
 
 
-import com.patrykzdral.musicalworldcore.services.user.exception.InternalException;
+import com.patrykzdral.musicalworldcore.validation.exception.InternalException;
 import org.apache.commons.io.FilenameUtils;
 import org.hibernate.id.UUIDGenerator;
 import org.springframework.web.multipart.MultipartFile;

@@ -1,4 +1,4 @@
-package com.patrykzdral.musicalworldcore.services.user.exception;
+package com.patrykzdral.musicalworldcore.validation.exception;
 
 import com.patrykzdral.musicalworldcore.util.TimestampUtils;
 import org.springframework.http.HttpStatus;

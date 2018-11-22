@@ -1,8 +1,7 @@
 package com.patrykzdral.musicalworldcore.listener;
 
 import com.patrykzdral.musicalworldcore.persistance.entity.User;
-import com.patrykzdral.musicalworldcore.services.user.exception.InternalException;
-import com.patrykzdral.musicalworldcore.services.user.service.RegisterUserService;
+import com.patrykzdral.musicalworldcore.validation.exception.InternalException;
 import com.patrykzdral.musicalworldcore.services.user.service.ResetUserPasswordService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,7 +60,7 @@ public class ResetPasswordListener implements ApplicationListener<OnResetPasswor
         String username = user.getUsername();
         final String recipientAddress = user.getEmail();
         final String subject = "Reset Password";
-        final String resetPasswordUrl = event.getAppUrl() + "/updatePassword?token=" + token;
+        final String resetPasswordUrl = "http://localhost:4200/#/auth/reset-password?token=" + token;
         log.info(resetPasswordUrl);
         //final String message = messages.getMessage("message sent", null, event.getLocale());
         MimeMessage message = mailSender.createMimeMessage();

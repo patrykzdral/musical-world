@@ -3,7 +3,6 @@ package com.patrykzdral.musicalworldcore.register;
 import com.patrykzdral.musicalworldcore.persistance.entity.Role;
 import com.patrykzdral.musicalworldcore.persistance.entity.User;
 import com.patrykzdral.musicalworldcore.persistance.repository.UserRepository;
-import com.patrykzdral.musicalworldcore.services.user.exception.InternalException;
 import com.patrykzdral.musicalworldcore.services.user.service.impl.CustomUserDetailsService;
 import org.junit.Assert;
 import org.junit.Before;

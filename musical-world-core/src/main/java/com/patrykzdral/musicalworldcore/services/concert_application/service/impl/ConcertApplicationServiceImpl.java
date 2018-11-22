@@ -7,8 +7,9 @@ import com.patrykzdral.musicalworldcore.persistance.repository.ConcertApplicatio
 import com.patrykzdral.musicalworldcore.persistance.repository.ConcertInstrumentSlotRepository;
 import com.patrykzdral.musicalworldcore.persistance.repository.UserRepository;
 import com.patrykzdral.musicalworldcore.services.concert_application.dto.ConcertApplicationDTO;
+import com.patrykzdral.musicalworldcore.services.concert_application.dto.ConcertApplicationExamineDTO;
 import com.patrykzdral.musicalworldcore.services.concert_application.service.ConcertApplicationService;
-import com.patrykzdral.musicalworldcore.services.user.exception.InternalException;
+import com.patrykzdral.musicalworldcore.validation.exception.InternalException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -40,16 +41,20 @@ public class ConcertApplicationServiceImpl implements ConcertApplicationService 
         Optional<User> optionalUser = userRepository.findByUsername(concertApplicationDTO.getUsername());
         Optional<ConcertInstrumentSlot> optionalConcertInstrumentSlot =
                 concertInstrumentSlotRepository.findById(concertApplicationDTO.getConcertInstrumentSlot().getId());
-        if(optionalConcertInstrumentSlot.isPresent()){
+        if (optionalConcertInstrumentSlot.isPresent()) {
             concertInstrumentSlotFound = optionalConcertInstrumentSlot.get();
-            if(concertInstrumentSlotFound.isTaken()){
+            if (concertInstrumentSlotFound.isTaken()) {
                 throw new InternalException("Creation exception", "Slot is taken");
             }
-        }else{throw new InternalException("Creation exception", "Slot does not exists"); }
+        } else {
+            throw new InternalException("Creation exception", "Slot does not exists");
+        }
 
-        if(optionalUser.isPresent()){
+        if (optionalUser.isPresent()) {
             userFound = optionalUser.get();
-        }else{throw new InternalException("Creation exception", "User does not exists"); }
+        } else {
+            throw new InternalException("Creation exception", "User does not exists");
+        }
         return concertApplicationRepository.save(ConcertApplication.builder()
                 .accepted(concertApplicationDTO.isAccepted())
                 .user(userFound)
@@ -59,7 +64,35 @@ public class ConcertApplicationServiceImpl implements ConcertApplicationService 
 
     @Override
     public List<ConcertApplication> getConcertApplications(Long id) {
-       return concertApplicationRepository.getAllByConcertInstrumentSlot_Concert(id);
+        return concertApplicationRepository.getAllByConcertInstrumentSlot_Concert(id);
+    }
+
+    @Override
+    public void examine(ConcertApplicationExamineDTO concertApplicationExamineDTO) {
+        Optional<ConcertApplication> optionalConcertApplication = concertApplicationRepository.findById(concertApplicationExamineDTO.getId());
+        optionalConcertApplication.ifPresentOrElse(
+                value -> {
+                    if (concertApplicationExamineDTO.isAccepted()) {
+                        value.getConcertInstrumentSlot().setTaken(true);
+                        value.getConcertInstrumentSlot().setUser(value.getUser());
+                        concertApplicationRepository.delete(value);
+                        List<ConcertApplication> concertApplications = concertApplicationRepository.findAll();
+                        concertApplications.forEach(concertApplication -> {
+                                    if(concertApplication.getConcertInstrumentSlot().equals(value.getConcertInstrumentSlot())){
+                                        concertApplicationRepository.delete(concertApplication);
+                                    }
+                                }
+                        );
+                    } else{
+                        concertApplicationRepository.delete(value);
+                    }
+                },
+                () -> {
+                    throw new InternalException("Something went wrong", "concert application does not exists");
+                }
+
+        );
+
     }
 
 

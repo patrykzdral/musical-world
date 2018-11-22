@@ -12,7 +12,7 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ConcertDTOG {
+public class ConcertWithPhotoDTOG {
     private Long id;
     private String username;
     private String name;
@@ -25,4 +25,5 @@ public class ConcertDTOG {
     private boolean ensuredDrive;
     private boolean guaranteedMeal;
     private String picture;
+
 }

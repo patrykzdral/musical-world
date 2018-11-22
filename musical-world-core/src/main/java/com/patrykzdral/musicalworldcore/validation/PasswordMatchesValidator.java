@@ -1,7 +1,7 @@
 package com.patrykzdral.musicalworldcore.validation;
 
 
-import com.patrykzdral.musicalworldcore.services.user.exception.InternalException;
+import com.patrykzdral.musicalworldcore.validation.exception.InternalException;
 import com.patrykzdral.musicalworldcore.services.user.model.RegisterUserRequestDTO;
 import lombok.extern.slf4j.Slf4j;
 

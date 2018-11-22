@@ -1,11 +1,10 @@
 package com.patrykzdral.musicalworldcore.services.concert.service.impl;
 
-import com.patrykzdral.musicalworldcore.persistance.entity.Address;
 import com.patrykzdral.musicalworldcore.persistance.entity.Concert;
 import com.patrykzdral.musicalworldcore.persistance.repository.ConcertRepository;
 import com.patrykzdral.musicalworldcore.services.concert.dto.ConcertDTO;
 import com.patrykzdral.musicalworldcore.services.concert.service.AdminConcertsService;
-import com.patrykzdral.musicalworldcore.services.user.exception.InternalException;
+import com.patrykzdral.musicalworldcore.validation.exception.InternalException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

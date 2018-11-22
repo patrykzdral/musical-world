@@ -8,7 +8,7 @@ INSERT INTO `type` (`id`,`name`) VALUES (5,'keyboards');
 INSERT INTO `instrument` (`id`,`type_id`,`name`) VALUES (1,1,'viola');
 INSERT INTO `instrument` (`id`,`type_id`,`name`) VALUES (2,1,'violin');
 INSERT INTO `instrument` (`id`,`type_id`,`name`) VALUES (3,1,'cello');
-INSERT INTO `instrument` (`id`,`type_id`,`name`) VALUES (4,1,'double_bass');
+INSERT INTO `instrument` (`id`,`type_id`,`name`) VALUES (4,1,'double bass');
 INSERT INTO `instrument` (`id`,`type_id`,`name`) VALUES (5,1,'harp');
 
 INSERT INTO `instrument` (`id`,`type_id`,`name`) VALUES (6,2,'Bass Drum');

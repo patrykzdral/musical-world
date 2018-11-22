@@ -20,6 +20,12 @@ spring:
           starttls:
             enable: true
           timeout: 8000
+  servlet:
+    multipart:
+      max-file-size: 5MB
+      max-request-size: 5MB
+
+
 ---
 spring:
   profiles: default

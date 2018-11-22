@@ -5,7 +5,7 @@ import com.patrykzdral.musicalworldcore.persistance.entity.VerificationToken;
 import com.patrykzdral.musicalworldcore.persistance.repository.RoleRepository;
 import com.patrykzdral.musicalworldcore.persistance.repository.UserRepository;
 import com.patrykzdral.musicalworldcore.persistance.repository.VerificationTokenRepository;
-import com.patrykzdral.musicalworldcore.services.user.exception.InternalException;
+import com.patrykzdral.musicalworldcore.validation.exception.InternalException;
 import com.patrykzdral.musicalworldcore.services.user.model.RegisterUserRequestDTO;
 import com.patrykzdral.musicalworldcore.services.user.service.RegisterUserService;
 import lombok.extern.slf4j.Slf4j;
@@ -79,7 +79,7 @@ public class RegisterUserServiceImpl implements RegisterUserService {
         }
 
         user.setConfirmed(true);
-        // verificationTokenRepository.delete(verificationToken);
+        verificationTokenRepository.delete(verificationToken);
         userRepository.save(user);
         return TOKEN_VALID;
     }

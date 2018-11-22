@@ -20,13 +20,12 @@ CREATE TABLE `type` (
 
 CREATE TABLE `picture` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `name` VARCHAR(45),
-  `file_name` VARCHAR(45),
-  `creation_date` DATETIME,
-  `type_id` bigint(20),
+  `creation_date` datetime DEFAULT NULL,
+  `file_name` varchar(255) DEFAULT NULL,
+  `mimetype` varchar(255) DEFAULT NULL,
+  `pic` longblob,
   PRIMARY KEY (`id`),
-  UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE,
-  FOREIGN KEY (`type_id`) REFERENCES type(`id`)
+  UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE
 );
 
 CREATE TABLE `role` (
@@ -190,12 +189,14 @@ CREATE TABLE `orchestra_member` (
 
 CREATE TABLE `user_reference` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `user_id` bigint(20) NOT NULL,
+  `user_to_id` bigint(20) NOT NULL,
+  `user_from_id` bigint(20) NOT NULL,
   `text` VARCHAR(300) NOT NULL,
-  `star_rating` bigint(20) NOT NULL,
+  `star_rating` int(20) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE,
-  FOREIGN KEY (`user_id`) REFERENCES user(`id`)
+  FOREIGN KEY (`user_to_id`) REFERENCES user(`id`),
+  FOREIGN KEY (`user_from_id`) REFERENCES user(`id`)
 );
 
 

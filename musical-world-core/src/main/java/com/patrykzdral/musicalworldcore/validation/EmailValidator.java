@@ -1,6 +1,6 @@
 package com.patrykzdral.musicalworldcore.validation;
 
-import com.patrykzdral.musicalworldcore.services.user.exception.InternalException;
+import com.patrykzdral.musicalworldcore.validation.exception.InternalException;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;

@@ -2,23 +2,18 @@ package com.patrykzdral.musicalworldcore.controller.user;
 
 import com.patrykzdral.musicalworldcore.listener.OnResetPasswordEvent;
 import com.patrykzdral.musicalworldcore.persistance.entity.User;
-import com.patrykzdral.musicalworldcore.services.user.model.PasswordDto;
-import com.patrykzdral.musicalworldcore.services.user.service.RegisterUserService;
 import com.patrykzdral.musicalworldcore.services.user.service.ResetUserPasswordService;
 import com.patrykzdral.musicalworldcore.services.user.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
-import java.util.Locale;
-import java.util.Optional;
-
-import static org.springframework.http.ResponseEntity.ok;
 
 @RestController
 @Slf4j
@@ -34,14 +29,24 @@ public class ResetPasswordController {
         this.eventPublisher = eventPublisher;
     }
 
-    @RequestMapping(value = "/user/resetPassword", method = RequestMethod.POST)
-    @ResponseBody
+    @RequestMapping(value = "/user/requestResetPassword", method = RequestMethod.POST)
     public ResponseEntity<Object> resetPassword(final HttpServletRequest request, @RequestParam("email") final String userEmail) {
         User user = resetUserPasswordService.resetUserPassword(userEmail);
 
         eventPublisher.publishEvent(new OnResetPasswordEvent(user, request.getLocale(), getAppUrl(request)));
-        return  ResponseEntity.ok(user);
+        return ResponseEntity.ok(user);
     }
+
+    @RequestMapping(value = "/user/confirmResetPassword", method = RequestMethod.POST)
+    public ResponseEntity<String> confirmPasswordReset(@RequestParam("password") final String password, @RequestParam("token") final String token) {
+        String message = resetUserPasswordService.validateResetTokenAndChangePassword(token, password);
+        log.info(message);
+        if (message.equals("valid"))
+             return ResponseEntity.status(HttpStatus.OK).body(message);
+        else return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(message);
+
+    }
+
     private String getAppUrl(HttpServletRequest request) {
         return "http://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath();
     }

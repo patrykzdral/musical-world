@@ -1,4 +1,4 @@
-package com.patrykzdral.musicalworldcore.services.user.exception;
+package com.patrykzdral.musicalworldcore.validation.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

@@ -9,6 +9,7 @@ import com.patrykzdral.musicalworldcore.services.user.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -37,7 +38,6 @@ public class RegistrationController {
     @ResponseBody
     public ResponseEntity<Object> save(@Valid @RequestBody RegisterUserRequestDTO registerUserRequestDTO, final HttpServletRequest request) {
         User user = registerUserService.registerUserAccount(registerUserRequestDTO);
-        log.info("CHUJ" + user.toString());
         log.info(getAppUrl(request));
         eventPublisher.publishEvent(new OnRegistrationCompleteEvent(user, request.getLocale(), getAppUrl(request)));
         return ResponseEntity.ok(user);
@@ -45,17 +45,15 @@ public class RegistrationController {
 
 
 
-    @RequestMapping(value = "/registrationConfirm", method = RequestMethod.GET)
-    public String confirmRegistration(final HttpServletRequest request, final Model model, @RequestParam("token") final String token) throws UnsupportedEncodingException {
+    @RequestMapping(value = "/registrationConfirm", method = RequestMethod.POST)
+    public ResponseEntity<String> confirmRegistration(final HttpServletRequest request, final Model model, @RequestParam("token") final String token) throws UnsupportedEncodingException {
+        log.info(token);
         Locale locale = request.getLocale();
         final String result = registerUserService.validateVerificationToken(token);
         if (result.equals("valid")) {
-            return "redirect:/console.html?lang=" + locale.getLanguage();
+            return ResponseEntity.status(HttpStatus.OK).body("account activated");
         }
-        //dto.addAttribute("message", messages.getMessage("auth.message." + result, null, locale));
-        model.addAttribute("expired", "expired".equals(result));
-        model.addAttribute("token", token);
-        return "redirect:/badUser.html?lang=" + locale.getLanguage();
+        return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body("bad token");
     }
 
     private String getAppUrl(HttpServletRequest request) {

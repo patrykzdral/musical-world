@@ -17,16 +17,16 @@ public class Picture {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "name")
-    private String name;
-
     @Column(name = "file_name")
     private String fileName;
 
     @Column(name = "creation_date")
     private ZonedDateTime creationDate;
 
-    @ManyToOne
-    @JoinColumn(name = "type_id")
-    private Type type;
+    @Column(name = "mimetype")
+    private String mimetype;
+
+    @Lob
+    @Column(name="pic")
+    private byte[] pic;
 }

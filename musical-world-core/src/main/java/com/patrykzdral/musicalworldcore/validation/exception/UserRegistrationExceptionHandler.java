@@ -16,10 +16,10 @@ public class UserRegistrationExceptionHandler extends ResponseEntityExceptionHan
 
     private TimestampUtils timestampUtils;
 
-    @ExceptionHandler({InternalException.class})
-    public ResponseEntity<Object> handleInternalException(InternalException internalException) {
-        logger.error("400 Status Code", internalException);
-        var response = new ErrorResponse(internalException.getErrorCode(), internalException.getMessage(), Timestamp.from(Instant.now()));
+    @ExceptionHandler({ApplicationException.class})
+    public ResponseEntity<Object> handleInternalException(ApplicationException applicationException) {
+        logger.error("400 Status Code", applicationException);
+        var response = new ErrorResponse(applicationException.getErrorCode().toString(), applicationException.getMessage(), Timestamp.from(Instant.now()));
         return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 

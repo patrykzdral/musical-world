@@ -7,7 +7,7 @@ import com.patrykzdral.musicalworldcore.services.concert_application.dto.Concert
 import java.util.List;
 
 public interface ConcertApplicationService {
-    ConcertApplication save(ConcertApplicationDTO concertApplicationDTO);
+    ConcertApplication save(ConcertApplicationDTO concertApplicationDTO, String username);
     List<ConcertApplication> getConcertApplications(Long id);
-    void examine(ConcertApplicationExamineDTO concertApplicationExamineDTO);
+    void examine(ConcertApplicationExamineDTO concertApplicationExamineDTO, String username);
 }

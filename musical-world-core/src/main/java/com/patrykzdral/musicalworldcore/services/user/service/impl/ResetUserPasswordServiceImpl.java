@@ -4,7 +4,7 @@ import com.patrykzdral.musicalworldcore.persistance.entity.PasswordResetToken;
 import com.patrykzdral.musicalworldcore.persistance.entity.User;
 import com.patrykzdral.musicalworldcore.persistance.repository.PasswordResetTokenRepository;
 import com.patrykzdral.musicalworldcore.persistance.repository.UserRepository;
-import com.patrykzdral.musicalworldcore.validation.exception.InternalException;
+import com.patrykzdral.musicalworldcore.validation.exception.ApplicationException;
 import com.patrykzdral.musicalworldcore.services.user.service.ResetUserPasswordService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,7 +43,7 @@ public class ResetUserPasswordServiceImpl implements ResetUserPasswordService {
         if (optionalUser.isPresent()) {
             user = optionalUser.get();
         }
-        else throw new InternalException("RESET_PASSWORD_EXCEPTION", "Email does not exists");
+        else throw new ApplicationException("RESET_PASSWORD_EXCEPTION", "Email does not exists");
         return user;
     }
 

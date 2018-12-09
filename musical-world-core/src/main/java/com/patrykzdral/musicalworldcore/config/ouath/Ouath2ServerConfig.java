@@ -31,8 +31,8 @@ public class Ouath2ServerConfig extends AuthorizationServerConfigurerAdapter {
     private PasswordEncoder passwordEncoder;
 
     @Autowired
-    private @Qualifier(value = "authServerAuthenticationManager")
-    AuthenticationManager authenticationManager;
+    @Qualifier(value = "authServerAuthenticationManager")
+    private AuthenticationManager authenticationManager;
     @Autowired
     private CustomUserDetailsService customUserDetailsService;
 
@@ -61,14 +61,6 @@ public class Ouath2ServerConfig extends AuthorizationServerConfigurerAdapter {
     @Override
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
         clients.jdbc(dataSource);
-//        clients.jdbc(dataSource)
-//                .passwordEncoder(passwordEncoder)
-//                .withClient("patrykzdral")
-//                .secret("verysecretpassword")
-//                .authorizedGrantTypes("password", "authorization_code", "client_credentials")
-//                .scopes("read", "write", "trust")
-//                .accessTokenValiditySeconds(15 * 60)
-//                .refreshTokenValiditySeconds(30 * 24 * 60 * 60);
     }
 
     @Override

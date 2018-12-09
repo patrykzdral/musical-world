@@ -6,7 +6,8 @@ import com.patrykzdral.musicalworldcore.services.concert.dto.ConcertDTO;
 import com.patrykzdral.musicalworldcore.services.concert.dto.get_dto.ConcertWithPhotoDTOG;
 import com.patrykzdral.musicalworldcore.services.concert.service.ConcertService;
 import com.patrykzdral.musicalworldcore.services.instrument.dto.InstrumentDTO;
-import com.patrykzdral.musicalworldcore.validation.exception.InternalException;
+import com.patrykzdral.musicalworldcore.validation.exception.ApplicationException;
+import com.patrykzdral.musicalworldcore.validation.exception.ExceptionCode;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,71 +43,15 @@ public class ConcertServiceImpl implements ConcertService {
         this.instrumentRepository = instrumentRepository;
         this.concertInstrumentSlotRepository = concertInstrumentSlotRepository;
     }
-
-    @Override
-    public List<Concert> findAll() {
-        return concertRepository.findAll();
-    }
-
-    @Override
-    public List<Concert> findAllNotUserEvents(String name) {
-        return concertRepository.findAllNotUserConcerts(name);
-    }
-
-    @Override
-    public Optional<Concert> findOne(Long id) {
-        return concertRepository.findById(id);
-    }
-
-    @Override
-    public List<Concert> filterConcerts(String username, String name, List<InstrumentDTO> instruments, Date dateFrom, Date dateTo) {
-        List<Concert> filteredConcerts = concertRepository.findAllNotUserConcerts(username);
-        if (name != null) filteredConcerts = filteredConcerts.stream().filter(concert -> concert
-                .getName()
-                .contains(name))
-                .collect(Collectors.toList());
-        if (dateFrom != null)
-            filteredConcerts = filteredConcerts.stream().filter(filteredConcert -> filteredConcert.getDateFrom().after(dateFrom)).collect(Collectors.toList());
-        if (dateTo != null)
-            filteredConcerts = filteredConcerts.stream().filter(filteredConcert -> filteredConcert.getDateFrom().before(dateTo)).collect(Collectors.toList());
-        if (instruments != null) filteredConcerts = filteredConcerts
-                .stream()
-                .filter(concert -> filterConcert(concert, instruments))
-                .collect(Collectors.toList());
-        return filteredConcerts;
-    }
-
-    @Override
-    public List<ConcertWithPhotoDTOG> findAllNotUserEventsWithPhoto(String name) {
-        List<Concert> concertList = concertRepository.findAllNotUserConcerts(name);
-        return concertList.stream().map(concert -> {
-                    try {
-                        return convertToDto(concert);
-                    } catch (IOException e) {
-                        log.error(e.getMessage());
-                        return null;
-                    }
-                }
-        ).collect(Collectors.toList());
-    }
-
-    private static boolean filterConcert(Concert concert, List<InstrumentDTO> instruments) {
-        return concert.getConcertInstrumentSlots().stream().anyMatch(
-                concertInstrumentSlot -> instruments
-                        .stream()
-                        .anyMatch(instrumentDTO -> instrumentDTO.getName().equals(concertInstrumentSlot.getInstrument().getName()))
-        );
-    }
-
     @Override
     @Transactional
-    public Concert save(ConcertDTO concert) throws IOException {
+    public Concert save(ConcertDTO concert, String username)  {
         log.info(concert.getPictureName());
         Picture picture = null;
-        Optional<User> optionalUser = userRepository.findByUsername(concert.getUsername());
+        Optional<User> optionalUser = userRepository.findByUsername(username);
         Optional<Picture> optionalPicture = pictureRepository.findByFileName(concert.getPictureName());
         if (!optionalUser.isPresent()) {
-            throw new InternalException("Creation exception", "User does not exists");
+            throw new ApplicationException(ExceptionCode.EXCEPTION_005, "User does not exists");
         }
         if (optionalPicture.isPresent()) {
             picture = optionalPicture.get();
@@ -152,10 +97,75 @@ public class ConcertServiceImpl implements ConcertService {
         return concertRepository.save(concertToSave);
     }
 
+    @Override
+    public List<Concert> findAll() {
+        return concertRepository.findAll();
+    }
+
+    @Override
+    public List<Concert> findAllNotUserEvents(String name) {
+        return concertRepository.findAllNotUserConcerts(name);
+    }
+
+    @Override
+    public Optional<Concert> findOne(Long id) {
+        return concertRepository.findById(id);
+    }
+
+    @Override
+    public List<Concert> filterConcerts(String username, String name, List<String> instruments, Date dateFrom, Date dateTo) {
+        List<Concert> filteredConcerts = concertRepository.findAllNotUserConcerts(username);
+        if (name != null) filteredConcerts = filteredConcerts.stream().filter(concert -> concert
+                .getName().toLowerCase()
+                .contains(name.toLowerCase()))
+                .collect(Collectors.toList());
+
+        if (dateFrom != null){
+            log.info(dateFrom.toString());
+            filteredConcerts = filteredConcerts.stream().filter(filteredConcert -> filteredConcert.getDateFrom().after(dateFrom)).collect(Collectors.toList());
+        }
+        if (dateTo != null){
+            log.info(dateTo.toString());
+            filteredConcerts = filteredConcerts.stream().filter(filteredConcert -> filteredConcert.getDateFrom().before(dateTo)).collect(Collectors.toList());
+        }
+
+        if (instruments != null) filteredConcerts = filteredConcerts
+                .stream()
+                .filter(concert -> filterConcert(concert, instruments))
+                .collect(Collectors.toList());
+
+        return filteredConcerts;
+    }
+
+    @Override
+    public List<ConcertWithPhotoDTOG> findAllNotUserEventsWithPhoto(String name) {
+        List<Concert> concertList = concertRepository.findAllNotUserConcerts(name);
+        return concertList.stream().map(concert -> {
+                    try {
+                        return convertToDto(concert);
+                    } catch (IOException e) {
+                        log.error(e.getMessage());
+                        return null;
+                    }
+                }
+        ).collect(Collectors.toList());
+    }
+
+    private static boolean filterConcert(Concert concert, List<String> instruments) {
+        return concert.getConcertInstrumentSlots().stream().anyMatch(
+                concertInstrumentSlot -> instruments
+                        .stream()
+                        .anyMatch(instrumentDTO -> instrumentDTO.equals(concertInstrumentSlot.getInstrument().getName()))
+        );
+    }
+
+
+
 
     private ConcertWithPhotoDTOG convertToDto(Concert concert) throws IOException {
         byte[] photo;
         ConcertWithPhotoDTOG dto = modelMapper.map(concert, ConcertWithPhotoDTOG.class);
+        dto.setUsername(concert.getUser().getUsername());
         Optional<Picture> concertPhoto = Optional.ofNullable(concert.getPicture());
         if (concertPhoto.isPresent()) {
             photo = concertPhoto.get().getPic();
@@ -165,5 +175,6 @@ public class ConcertServiceImpl implements ConcertService {
         }
         return dto;
     }
+
 
 }

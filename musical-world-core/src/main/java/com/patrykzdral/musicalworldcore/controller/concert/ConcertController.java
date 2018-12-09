@@ -2,12 +2,12 @@ package com.patrykzdral.musicalworldcore.controller.concert;
 
 import com.patrykzdral.musicalworldcore.persistance.entity.Concert;
 import com.patrykzdral.musicalworldcore.persistance.entity.Picture;
-import com.patrykzdral.musicalworldcore.persistance.entity.User;
 import com.patrykzdral.musicalworldcore.services.concert.dto.ConcertDTO;
 import com.patrykzdral.musicalworldcore.services.concert.dto.get_dto.ConcertDTOG;
 import com.patrykzdral.musicalworldcore.services.concert.dto.get_dto.ConcertWithPhotoDTOG;
 import com.patrykzdral.musicalworldcore.services.concert.service.ConcertService;
 import com.patrykzdral.musicalworldcore.services.instrument.dto.InstrumentDTO;
+import com.patrykzdral.musicalworldcore.services.user.model.CustomUserDetails;
 import com.patrykzdral.musicalworldcore.services.user.model.UserWithPhotoDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -15,6 +15,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -40,17 +42,12 @@ public class ConcertController {
         this.modelMapper = modelMapper;
     }
 
-    //TODO HANDLE EXCEPTION
     @PostMapping(value = "/new", consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
-    public void createConcert(@Valid @RequestBody ConcertDTO request,
-                                        HttpServletRequest httpServletRequest, Locale locale) {
-        try {
-            concertService.save(request);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    public void createConcert(Authentication authentication, @Valid @RequestBody ConcertDTO request) {
+            concertService.save(request,((User) authentication.getPrincipal()).getUsername());
+
     }
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
@@ -64,11 +61,10 @@ public class ConcertController {
 
     }
 
-
     @GetMapping(value = "/not-user", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
-    public List<ConcertDTOG> getAllNotUserConcerts(@RequestParam String name) {
-        List<Concert> concerts = concertService.findAllNotUserEvents(name);
+    public List<ConcertDTOG> getAllNotUserConcerts( Authentication authentication) {
+        List<Concert> concerts = concertService.findAllNotUserEvents(((User) authentication.getPrincipal()).getUsername());
         log.info(concerts.toString());
         return concerts.stream()
                 .map(this::convertToDto)
@@ -78,20 +74,17 @@ public class ConcertController {
 
     @GetMapping(value = "/not-user-with-photo", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
-    public List<ConcertWithPhotoDTOG> getAllNotUserConcertsWithPhoto(@RequestParam String name) {
-        List<ConcertWithPhotoDTOG> concerts = concertService.findAllNotUserEventsWithPhoto(name);
-        log.info(concerts.toString());
-        return concerts;
-
+    public List<ConcertWithPhotoDTOG> getAllNotUserConcertsWithPhoto(Authentication authentication) {
+        return concertService.findAllNotUserEventsWithPhoto(((User) authentication.getPrincipal()).getUsername());
     }
 
     @GetMapping(value = "/filtered", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
-    public List<ConcertDTOG> getFilteredConcerts(@RequestParam String username, @RequestParam(value = "name", required = false) String name,
-                                                 @RequestParam(value = "instruments", required = false) List<InstrumentDTO> instruments,
+    public List<ConcertDTOG> getFilteredConcerts(Authentication authentication, @RequestParam(value = "name", required = false) String name,
+                                                 @RequestParam(value = "instruments", required = false) List<String> instruments,
                                                  @RequestParam(value = "dateFrom", required = false) Date dateFrom,
                                                  @RequestParam(value = "dateTo", required = false) Date dateTo) {
-        List<Concert> concerts = concertService.filterConcerts(username, name, instruments, dateFrom, dateTo);
+        List<Concert> concerts = concertService.filterConcerts(((User) authentication.getPrincipal()).getUsername(), name, instruments, dateFrom, dateTo);
         return concerts.stream()
                 .map(this::convertToDto)
                 .collect(Collectors.toList());

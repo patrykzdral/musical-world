@@ -2,7 +2,7 @@ package com.patrykzdral.musicalworldcore.controller.concert;
 
 import com.patrykzdral.musicalworldcore.persistance.entity.Concert;
 import com.patrykzdral.musicalworldcore.persistance.entity.Picture;
-import com.patrykzdral.musicalworldcore.services.concert.dto.ConcertDTO;
+import com.patrykzdral.musicalworldcore.services.concert.dto.ConcertInstrumentSlotDeleteDTO;
 import com.patrykzdral.musicalworldcore.services.concert.dto.get_dto.ConcertDTOG;
 import com.patrykzdral.musicalworldcore.services.concert.service.AdminConcertsService;
 import lombok.extern.slf4j.Slf4j;
@@ -10,6 +10,8 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Base64;
@@ -35,16 +37,20 @@ public class AdminConcertController {
     //fail przy mapowaniu
     @DeleteMapping(value = "delete/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
-    public ConcertDTOG deleteConcert(@PathVariable("id") Long id) {
-        Concert concert = adminConcertsService.deleteConcertById(id);
-        return null;
+    public void deleteConcert(@PathVariable("id") Long id, Authentication authentication) {
+        adminConcertsService.deleteConcertById(id, ((User) authentication.getPrincipal()).getUsername());
+    }
 
+    @PostMapping(value = "delete-applications", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(HttpStatus.OK)
+    public void deleteConcertApplications(@RequestBody List<ConcertInstrumentSlotDeleteDTO> concertApplicationDTO) {
+        adminConcertsService.deleteConcertInstrumentSlots(concertApplicationDTO);
     }
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
-    public List<ConcertDTOG> getAllAdminConcerts(@RequestParam String name) {
-        List<Concert> concerts = adminConcertsService.findAdminConcerts(name);
+    public List<ConcertDTOG> getAllAdminConcerts(Authentication authentication) {
+        List<Concert> concerts = adminConcertsService.findAdminConcerts(((User) authentication.getPrincipal()).getUsername());
         log.info(concerts.toString());
         return concerts.stream()
                 .map(this::convertToDto)
@@ -52,10 +58,10 @@ public class AdminConcertController {
 
     }
 
-    @PutMapping(value = "update/{id}")
+    @PutMapping(value = "update")
     @ResponseStatus(HttpStatus.OK)
-    public ConcertDTO update(@PathVariable("id") Long id, @RequestParam ConcertDTO concert) {
-        return adminConcertsService.update(concert, id);
+    public ConcertDTOG update(@RequestBody ConcertDTOG concert, Authentication authentication) {
+        return adminConcertsService.update(concert, ((User) authentication.getPrincipal()).getUsername());
     }
 
     private ConcertDTOG convertToDto(Concert concert) {

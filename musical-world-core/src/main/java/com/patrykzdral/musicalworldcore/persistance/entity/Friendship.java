@@ -1,24 +1,29 @@
 package com.patrykzdral.musicalworldcore.persistance.entity;
 
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
+@Getter
+@Setter
 @Entity
-@Data
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
+@ToString
 public class Friendship {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "friend_id")
-    private User friend;
-
-    @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
 
+    @ManyToOne
+    @JoinColumn(name = "friend_id")
+    private User friend;
+
     private boolean accepted;
+
+    private boolean fromMe;
 }

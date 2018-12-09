@@ -1,7 +1,7 @@
 package com.patrykzdral.musicalworldcore.listener;
 
 import com.patrykzdral.musicalworldcore.persistance.entity.User;
-import com.patrykzdral.musicalworldcore.validation.exception.InternalException;
+import com.patrykzdral.musicalworldcore.validation.exception.ApplicationException;
 import com.patrykzdral.musicalworldcore.services.user.service.ResetUserPasswordService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,7 +42,7 @@ public class ResetPasswordListener implements ApplicationListener<OnResetPasswor
         try {
             this.resetPassword(event);
         } catch (MessagingException e) {
-            throw new InternalException("Sending mail error", e.getMessage());
+            throw new ApplicationException("Sending mail error", e.getMessage());
         }
     }
 

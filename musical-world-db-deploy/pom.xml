@@ -32,6 +32,14 @@
             <artifactId>mysql-connector-java</artifactId>
             <version>${mysql.driver.version}</version>
         </dependency>
+
+        <!-- https://mvnrepository.com/artifact/com.h2database/h2 -->
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <version>1.4.197</version>
+        </dependency>
+
     </dependencies>
     <profiles>
         <profile>
@@ -89,7 +97,33 @@
                 </plugins>
             </build>
         </profile>
-
+        <profile>
+            <id>test</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.flywaydb</groupId>
+                        <artifactId>flyway-maven-plugin</artifactId>
+                        <version>${flyway.version}</version>
+                        <configuration>
+                            <configFile>src/dbd-config/dbd-mworld-TEST.properties</configFile>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>flyway database migration</id>
+                                <phase>pre-integration-test</phase>
+                                <goals>
+                                    <goal>clean</goal>
+                                    <goal>baseline</goal>
+                                    <goal>migrate</goal>
+                                    <goal>info</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
     </profiles>
 
 </project>

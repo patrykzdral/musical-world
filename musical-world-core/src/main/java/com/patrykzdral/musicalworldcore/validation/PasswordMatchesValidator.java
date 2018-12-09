@@ -1,7 +1,7 @@
 package com.patrykzdral.musicalworldcore.validation;
 
 
-import com.patrykzdral.musicalworldcore.validation.exception.InternalException;
+import com.patrykzdral.musicalworldcore.validation.exception.ApplicationException;
 import com.patrykzdral.musicalworldcore.services.user.model.RegisterUserRequestDTO;
 import lombok.extern.slf4j.Slf4j;
 
@@ -22,7 +22,7 @@ public class PasswordMatchesValidator implements ConstraintValidator<PasswordMat
     public boolean isValid(final Object obj, final ConstraintValidatorContext context) {
         final RegisterUserRequestDTO user = (RegisterUserRequestDTO) obj;
         if (!user.getPassword().equals(user.getMatchingPassword()))
-            throw new InternalException("Registration error", message);
+            throw new ApplicationException("Registration error", message);
         return user.getPassword().equals(user.getMatchingPassword());
     }
 

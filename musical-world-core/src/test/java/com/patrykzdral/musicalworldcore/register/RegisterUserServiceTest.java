@@ -5,7 +5,7 @@ import com.patrykzdral.musicalworldcore.persistance.entity.VerificationToken;
 import com.patrykzdral.musicalworldcore.persistance.repository.RoleRepository;
 import com.patrykzdral.musicalworldcore.persistance.repository.VerificationTokenRepository;
 import com.patrykzdral.musicalworldcore.persistance.repository.UserRepository;
-import com.patrykzdral.musicalworldcore.validation.exception.InternalException;
+import com.patrykzdral.musicalworldcore.validation.exception.ApplicationException;
 import com.patrykzdral.musicalworldcore.services.user.model.RegisterUserRequestDTO;
 import com.patrykzdral.musicalworldcore.services.user.service.RegisterUserService;
 import com.patrykzdral.musicalworldcore.services.user.service.impl.RegisterUserServiceImpl;
@@ -108,7 +108,7 @@ public class RegisterUserServiceTest {
         when(userRepository.findByEmail(any())).thenReturn(Optional.ofNullable(User.builder().build()));
         RegisterUserRequestDTO registerUserRequestDTO =RegisterUserRequestDTO.builder().build();
         //expect
-        thrown.expect(InternalException.class);
+        thrown.expect(ApplicationException.class);
         //thrown.expect(hasProperty(ERROR_CODE,is(CONFIRMATION_ERROR)));
         thrown.expectMessage("Email is already in DB");
 
@@ -122,7 +122,7 @@ public class RegisterUserServiceTest {
 
         RegisterUserRequestDTO registerUserRequestDTO =RegisterUserRequestDTO.builder().build();
         //expect
-        thrown.expect(InternalException.class);
+        thrown.expect(ApplicationException.class);
         //thrown.expect(hasProperty(ERROR_CODE,is(CONFIRMATION_ERROR)));
         thrown.expectMessage("Username is already in DB");
 

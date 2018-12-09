@@ -1,4 +1,4 @@
-package com.patrykzdral.musicalworldcore;
+package com.patrykzdral.musicalworldcore.util;
 
 import com.patrykzdral.musicalworldcore.persistance.entity.User;
 import org.springframework.security.core.GrantedAuthority;

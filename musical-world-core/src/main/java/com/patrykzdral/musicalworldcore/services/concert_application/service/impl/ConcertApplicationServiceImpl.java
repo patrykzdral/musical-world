@@ -9,7 +9,8 @@ import com.patrykzdral.musicalworldcore.persistance.repository.UserRepository;
 import com.patrykzdral.musicalworldcore.services.concert_application.dto.ConcertApplicationDTO;
 import com.patrykzdral.musicalworldcore.services.concert_application.dto.ConcertApplicationExamineDTO;
 import com.patrykzdral.musicalworldcore.services.concert_application.service.ConcertApplicationService;
-import com.patrykzdral.musicalworldcore.validation.exception.InternalException;
+import com.patrykzdral.musicalworldcore.validation.exception.ApplicationException;
+import com.patrykzdral.musicalworldcore.validation.exception.ExceptionCode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -27,7 +28,9 @@ public class ConcertApplicationServiceImpl implements ConcertApplicationService 
     private final ConcertInstrumentSlotRepository concertInstrumentSlotRepository;
 
     @Autowired
-    public ConcertApplicationServiceImpl(ConcertApplicationRepository concertApplicationRepository, UserRepository userRepository, ConcertInstrumentSlotRepository concertInstrumentSlotRepository) {
+    public ConcertApplicationServiceImpl(ConcertApplicationRepository concertApplicationRepository,
+                                         UserRepository userRepository,
+                                         ConcertInstrumentSlotRepository concertInstrumentSlotRepository) {
         this.concertApplicationRepository = concertApplicationRepository;
         this.userRepository = userRepository;
         this.concertInstrumentSlotRepository = concertInstrumentSlotRepository;
@@ -35,25 +38,25 @@ public class ConcertApplicationServiceImpl implements ConcertApplicationService 
 
     @Override
     @Transactional
-    public ConcertApplication save(ConcertApplicationDTO concertApplicationDTO) {
+    public ConcertApplication save(ConcertApplicationDTO concertApplicationDTO, String username) {
         ConcertInstrumentSlot concertInstrumentSlotFound;
         User userFound;
-        Optional<User> optionalUser = userRepository.findByUsername(concertApplicationDTO.getUsername());
+        Optional<User> optionalUser = userRepository.findByUsername(username);
         Optional<ConcertInstrumentSlot> optionalConcertInstrumentSlot =
                 concertInstrumentSlotRepository.findById(concertApplicationDTO.getConcertInstrumentSlot().getId());
         if (optionalConcertInstrumentSlot.isPresent()) {
             concertInstrumentSlotFound = optionalConcertInstrumentSlot.get();
             if (concertInstrumentSlotFound.isTaken()) {
-                throw new InternalException("Creation exception", "Slot is taken");
+                throw new ApplicationException(ExceptionCode.EXCEPTION_001, "Slot is taken");
             }
         } else {
-            throw new InternalException("Creation exception", "Slot does not exists");
+            throw new ApplicationException(ExceptionCode.EXCEPTION_002, "Slot does not exists");
         }
 
         if (optionalUser.isPresent()) {
             userFound = optionalUser.get();
         } else {
-            throw new InternalException("Creation exception", "User does not exists");
+            throw new ApplicationException(ExceptionCode.EXCEPTION_003, "User does not exists");
         }
         return concertApplicationRepository.save(ConcertApplication.builder()
                 .accepted(concertApplicationDTO.isAccepted())
@@ -64,11 +67,12 @@ public class ConcertApplicationServiceImpl implements ConcertApplicationService 
 
     @Override
     public List<ConcertApplication> getConcertApplications(Long id) {
-        return concertApplicationRepository.getAllByConcertInstrumentSlot_Concert(id);
+        return concertApplicationRepository.getAllByConcertInstrumentSlotConcert(id);
     }
 
     @Override
-    public void examine(ConcertApplicationExamineDTO concertApplicationExamineDTO) {
+    @Transactional
+    public void examine(ConcertApplicationExamineDTO concertApplicationExamineDTO, String username) {
         Optional<ConcertApplication> optionalConcertApplication = concertApplicationRepository.findById(concertApplicationExamineDTO.getId());
         optionalConcertApplication.ifPresentOrElse(
                 value -> {
@@ -88,7 +92,7 @@ public class ConcertApplicationServiceImpl implements ConcertApplicationService 
                     }
                 },
                 () -> {
-                    throw new InternalException("Something went wrong", "concert application does not exists");
+                    throw new ApplicationException(ExceptionCode.EXCEPTION_004, "concert application does not exists");
                 }
 
         );

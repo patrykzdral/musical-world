@@ -11,5 +11,11 @@ import java.util.List;
 public interface ConcertApplicationRepository extends JpaRepository<ConcertApplication, Long> {
 
     @Query("Select c FROM ConcertApplication c where c.concertInstrumentSlot.concert.id=?1")
-    List<ConcertApplication> getAllByConcertInstrumentSlot_Concert(Long id);
+    List<ConcertApplication> getAllByConcertInstrumentSlotConcert(Long id);
+
+    @Query("Select c FROM ConcertApplication c where c.concertInstrumentSlot.id=?1")
+    List<ConcertApplication> getAllByConcertInstrumentSlotId(Long id);
+
+//    @Query("DELETE FROM ConcertApplication c where c.concertInstrumentSlot.id=?1")
+    void deleteAllByConcertInstrumentSlotId(Long id);
 }

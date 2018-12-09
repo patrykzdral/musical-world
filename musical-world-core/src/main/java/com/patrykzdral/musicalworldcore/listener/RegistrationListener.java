@@ -1,7 +1,7 @@
 package com.patrykzdral.musicalworldcore.listener;
 
 import com.patrykzdral.musicalworldcore.persistance.entity.User;
-import com.patrykzdral.musicalworldcore.validation.exception.InternalException;
+import com.patrykzdral.musicalworldcore.validation.exception.ApplicationException;
 import com.patrykzdral.musicalworldcore.services.user.service.RegisterUserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +20,8 @@ import java.util.UUID;
 
 @Component
 @Slf4j
-public class RegistrationListener implements ApplicationListener<OnRegistrationCompleteEvent> {
+public class RegistrationListener implements
+        ApplicationListener<OnRegistrationCompleteEvent> {
     private final RegisterUserService service;
 
     private final MessageSource messages;
@@ -30,7 +31,8 @@ public class RegistrationListener implements ApplicationListener<OnRegistrationC
     private final Environment env;
 
     @Autowired
-    public RegistrationListener(Environment env, JavaMailSender mailSender, @Qualifier("messageSource") MessageSource messages, RegisterUserService service) {
+    public RegistrationListener(Environment env, JavaMailSender mailSender,
+                                @Qualifier("messageSource") MessageSource messages, RegisterUserService service) {
         this.env = env;
         this.mailSender = mailSender;
         this.messages = messages;
@@ -42,7 +44,8 @@ public class RegistrationListener implements ApplicationListener<OnRegistrationC
         try {
             this.confirmRegistration(event);
         } catch (MessagingException e) {
-            throw new InternalException("Sending mail error", e.getMessage());
+            throw new ApplicationException("Sending mail error"
+                    , e.getMessage());
         }
     }
 
@@ -86,5 +89,4 @@ public class RegistrationListener implements ApplicationListener<OnRegistrationC
         helper.setFrom(env.getProperty("spring.mail.host"));
         return message;
     }
-
 }

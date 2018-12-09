@@ -72,6 +72,24 @@ images:
 
 ---
 spring:
+  profiles: heroku
+  datasource:
+    url: jdbc:postgresql://localhost:5432/musical_world??useSSL=false&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC
+    username: postgres
+    password: postgres
+  jpa:
+    hibernate:
+      ddl-auto: create
+    show-sql: false
+  data:
+    rest:
+      detection-strategy: annotated
+server:
+  servlet:
+    context-path: /musicalworld/rest
+  port: 8090
+---
+spring:
   profiles: local
   datasource:
     url: jdbc:mysql://127.0.0.1:3306/musical_world?useSSL=false&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC

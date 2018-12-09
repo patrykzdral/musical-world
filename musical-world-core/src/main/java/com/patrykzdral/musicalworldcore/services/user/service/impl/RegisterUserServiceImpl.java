@@ -5,9 +5,10 @@ import com.patrykzdral.musicalworldcore.persistance.entity.VerificationToken;
 import com.patrykzdral.musicalworldcore.persistance.repository.RoleRepository;
 import com.patrykzdral.musicalworldcore.persistance.repository.UserRepository;
 import com.patrykzdral.musicalworldcore.persistance.repository.VerificationTokenRepository;
-import com.patrykzdral.musicalworldcore.validation.exception.InternalException;
+import com.patrykzdral.musicalworldcore.validation.exception.ApplicationException;
 import com.patrykzdral.musicalworldcore.services.user.model.RegisterUserRequestDTO;
 import com.patrykzdral.musicalworldcore.services.user.service.RegisterUserService;
+import com.patrykzdral.musicalworldcore.validation.exception.ExceptionCode;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -46,10 +47,10 @@ public class RegisterUserServiceImpl implements RegisterUserService {
     @Override
     public User registerUserAccount(RegisterUserRequestDTO registerUserRequestDTO) {
         if (emailIsAlreadyInDB(registerUserRequestDTO.getEmail())) {
-            throw new InternalException("REGISTER_EXCEPTION", "Email is already in DB");
+            throw new ApplicationException(ExceptionCode.EXCEPTION_012, "Email is already in DB");
         }
         if (usernameAlreadyInDB(registerUserRequestDTO.getUsername())) {
-            throw new InternalException("REGISTER_EXCEPTION", "Username is already in DB");
+            throw new ApplicationException(ExceptionCode.EXCEPTION_013, "Username is already in DB");
         }
         return userRepository.save(User.builder()
                 .username(registerUserRequestDTO.getUsername())

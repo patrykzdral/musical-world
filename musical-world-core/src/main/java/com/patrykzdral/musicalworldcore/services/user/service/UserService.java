@@ -18,11 +18,11 @@ public interface UserService {
 
     void saveUserPhoto(MultipartFile file, User user) throws IOException;
 
-    User deleteAccount(String username);
+    void deleteAccount(String username);
 
     public UserWithPhotoDTO findUserWithPhotoByUsername(String username) throws IOException;
 
     void assignPhotoToUser(MultipartFile file, String username) throws IOException;
 
-    User updateAccount(UserWithPhotoDTO user);
+    User updateAccount(UserWithPhotoDTO user, String username);
 }

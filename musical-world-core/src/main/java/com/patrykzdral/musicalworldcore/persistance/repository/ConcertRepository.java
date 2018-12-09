@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface ConcertRepository  extends JpaRepository<Concert, Long> {
+public interface ConcertRepository extends JpaRepository<Concert, Long> {
     @Override
     Optional<Concert> findById(Long id);
 

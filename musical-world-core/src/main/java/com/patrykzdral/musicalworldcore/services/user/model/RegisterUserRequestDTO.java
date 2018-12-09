@@ -13,7 +13,6 @@ import javax.validation.constraints.Size;
 
 @Value
 @Builder
-//@PasswordMatches
 public class RegisterUserRequestDTO {
     @NotNull
     private String username;

@@ -2,11 +2,13 @@ package com.patrykzdral.musicalworldcore.services.user.service.impl;
 
 import com.patrykzdral.musicalworldcore.persistance.entity.Picture;
 import com.patrykzdral.musicalworldcore.persistance.entity.User;
+import com.patrykzdral.musicalworldcore.persistance.entity.UserReference;
+import com.patrykzdral.musicalworldcore.persistance.repository.UserReferenceRepository;
 import com.patrykzdral.musicalworldcore.persistance.repository.UserRepository;
-import com.patrykzdral.musicalworldcore.services.picture.service.PictureService;
-import com.patrykzdral.musicalworldcore.validation.exception.InternalException;
 import com.patrykzdral.musicalworldcore.services.user.model.UserWithPhotoDTO;
 import com.patrykzdral.musicalworldcore.services.user.service.UserService;
+import com.patrykzdral.musicalworldcore.validation.exception.ApplicationException;
+import com.patrykzdral.musicalworldcore.validation.exception.ExceptionCode;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,21 +17,25 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.transaction.Transactional;
 import java.io.IOException;
 import java.util.Base64;
+import java.util.List;
 import java.util.Optional;
 
 @Service
 @Slf4j
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
-    private final PictureService pictureService;
+    private final UserReferenceRepository userReferenceRepository;
     private final PasswordEncoder passwordEncoder;
     private final ModelMapper modelMapper;
+
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, PictureService pictureService, @Qualifier("bCryptPasswordEncoder") PasswordEncoder passwordEncoder, ModelMapper modelMapper) {
+    public UserServiceImpl(UserRepository userRepository, UserReferenceRepository userReferenceRepository,
+                           @Qualifier("bCryptPasswordEncoder") PasswordEncoder passwordEncoder, ModelMapper modelMapper) {
         this.userRepository = userRepository;
-        this.pictureService = pictureService;
+        this.userReferenceRepository = userReferenceRepository;
         this.passwordEncoder = passwordEncoder;
         this.modelMapper = modelMapper;
     }
@@ -56,7 +62,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void saveUserPhoto(MultipartFile file, User user)throws IOException {
+    public void saveUserPhoto(MultipartFile file, User user) throws IOException {
         Picture pic = Picture.builder()
                 .fileName(file.getOriginalFilename())
                 .mimetype(file.getContentType())
@@ -67,29 +73,35 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User deleteAccount(String username) {
+    @Transactional
+    public void deleteAccount(String username) {
         Optional<User> optionalUser = userRepository.findByUsername(username);
-        if(optionalUser.isPresent()){
-            userRepository.deleteById(optionalUser.get().getId());
-            return optionalUser.get();
-        }
-        else throw new InternalException("User exception", "User does not exists");
+        List<UserReference> userReferences = userReferenceRepository.findByUser(username);
+        Optional.of(userReferences).ifPresent(
+                userReferenceRepository::deleteAll
+        );
+        optionalUser.ifPresentOrElse(user -> {
+                    userRepository.deleteById(user.getId());
+
+                }, () -> {
+                    throw new ApplicationException(ExceptionCode.EXCEPTION_0012, "User does not exists");
+                }
+        );
     }
 
     @Override
     public UserWithPhotoDTO findUserWithPhotoByUsername(String username) throws IOException {
         Optional<User> optionalUser = userRepository.findByUsername(username);
-        if(optionalUser.isPresent()){
+        if (optionalUser.isPresent()) {
             return convertToDto(optionalUser.get());
-        }
-        else throw new InternalException("User exception", "User does not exists");
+        } else throw new ApplicationException(ExceptionCode.EXCEPTION_0012, "User does not exists");
 
     }
 
     @Override
     public void assignPhotoToUser(MultipartFile file, String username) throws IOException {
         Optional<User> optionalUser = userRepository.findByUsername(username);
-        if(optionalUser.isPresent()){
+        if (optionalUser.isPresent()) {
             Picture picture = Picture.builder()
                     .fileName(file.getOriginalFilename())
                     .mimetype(file.getContentType())
@@ -97,41 +109,36 @@ public class UserServiceImpl implements UserService {
                     .build();
             optionalUser.get().setPicture(picture);
             userRepository.save(optionalUser.get());
-        }
-        else throw new InternalException("User exception", "User does not exists");
+        } else throw new ApplicationException(ExceptionCode.EXCEPTION_0012, "User does not exists");
     }
 
     @Override
-    public User updateAccount(UserWithPhotoDTO userWithPhotoDTO) {
-        Optional<User> optionalUser = userRepository.findByUsername(userWithPhotoDTO.getUsername());
-        if(optionalUser.isPresent()){
-            User user = optionalUser.get();
-            log.info(user.getDescription());
-            User user2= user.toBuilder()
+    public User updateAccount(UserWithPhotoDTO userWithPhotoDTO, String username) {
+        Optional<User> optionalUser = userRepository.findByUsername(username);
+        if (optionalUser.isPresent()) {
+            User user = optionalUser.get().toBuilder()
                     .firstName(userWithPhotoDTO.getFirstName())
                     .lastName(userWithPhotoDTO.getLastName())
                     .description(userWithPhotoDTO.getDescription())
                     .phoneNumber(userWithPhotoDTO.getPhoneNumber())
                     .build();
-            log.info(user2.toString());
-            userRepository.save(user2);
+            userRepository.save(user);
             return optionalUser.get();
-        }
-        else throw new InternalException("User exception", "User does not exists");
+        } else throw new ApplicationException(ExceptionCode.EXCEPTION_0012, "User does not exists");
     }
 
     private UserWithPhotoDTO convertToDto(User user) throws IOException {
+        byte[] photo;
 
         UserWithPhotoDTO dto = modelMapper.map(user, UserWithPhotoDTO.class);
-        byte[] photo = user.getPicture().getPic();
-
-        StringBuilder base64 = new StringBuilder("data:image/png;base64,");
-        base64.append(Base64.getEncoder().encodeToString(photo));
-        dto.setPhoto(base64.toString());
+        Optional<Picture> concertPhoto = Optional.ofNullable(user.getPicture());
+        if (concertPhoto.isPresent()) {
+            photo = concertPhoto.get().getPic();
+            dto.setPhoto("data:image/png;base64," + Base64.getEncoder().encodeToString(photo));
+        }
 
         return dto;
     }
-
 
 
 }

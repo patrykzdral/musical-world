@@ -17,9 +17,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 public class ServerSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
-    private UserRepository userRepository;
-    @Autowired
-    private CustomUserDetailsService customUserDetailsService;
+//    private UserRepository userRepository;
+//    @Autowired
+//    private CustomUserDetailsService customUserDetailsService;
 
 
     @Bean(name = "authServerAuthenticationManager")
@@ -33,19 +33,19 @@ public class ServerSecurityConfig extends WebSecurityConfigurerAdapter {
         return PasswordEncoderFactories
                 .createDelegatingPasswordEncoder();
     }
+//    @Override
+//    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+//        auth
+//                .userDetailsService(customUserDetailsService)
+//                .passwordEncoder(passwordEncoder());
+//    }
+//
+//    @Override
+//    protected void configure(HttpSecurity http) throws Exception {
+//        http
+//                .authorizeRequests()
+//                .anyRequest()
+//                .permitAll();
+//    }
 
-    @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth
-                .userDetailsService(customUserDetailsService)
-                .passwordEncoder(passwordEncoder());
-    }
-
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
-        http
-                .authorizeRequests()
-                .anyRequest()
-                .permitAll();
-    }
 }

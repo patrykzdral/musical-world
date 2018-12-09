@@ -15,13 +15,13 @@ public interface ConcertService {
 
     List<Concert> findAll();
 
-    List<Concert> findAllNotUserEvents(String name);
+    List<Concert> findAllNotUserEvents(String username);
 
-    Concert save(ConcertDTO concert) throws IOException;
+    Concert save(ConcertDTO concert, String username);
 
     Optional<Concert> findOne(Long id);
 
-    List<Concert> filterConcerts(String username, String name, List<InstrumentDTO> instruments, Date dateFrom,Date dateTo);
+    List<Concert> filterConcerts(String username, String name, List<String> instruments, Date dateFrom,Date dateTo);
 
-    List<ConcertWithPhotoDTOG> findAllNotUserEventsWithPhoto(String name);
+    List<ConcertWithPhotoDTOG> findAllNotUserEventsWithPhoto(String username);
 }

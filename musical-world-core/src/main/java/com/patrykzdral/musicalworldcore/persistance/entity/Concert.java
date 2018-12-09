@@ -4,6 +4,8 @@ import lombok.*;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.util.Date;
 import java.util.List;
 
@@ -11,42 +13,57 @@ import java.util.List;
 @Builder(toBuilder = true)
 @NoArgsConstructor
 @AllArgsConstructor
-@Getter
 @Setter
 @EqualsAndHashCode
 public class Concert {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Getter
     private Long id;
 
+    @Size(min = 2, max = 1000)
+    @NotNull
+    @Getter
     private String name;
 
+    @Size(max = 2000)
+    @Getter
     private String description;
 
+    @Getter
     private Date dateFrom;
 
+    @Getter
     private Date dateTo;
 
     @OneToOne(cascade = {CascadeType.ALL})
     @JoinColumn(name = "address_id")
+    @Getter
     private Address address;
 
     @ManyToOne
     @JoinColumn(name = "owner_id")
+    @Getter
     private User user;
 
-    @ManyToOne
-    @JoinColumn(name = "picture_id")
+    @ManyToOne(cascade = {CascadeType.ALL})
+    @JoinColumn(name = "picture_id" )
+    @Getter
     private Picture picture;
 
+    @Getter
     private Long numberOfRehearsals;
 
-    public boolean ensuredDrive;
+    @Getter
+    private boolean ensuredDrive;
 
-    public boolean guaranteedMeal;
+    @Getter
+    private boolean guaranteedMeal;
 
     @OneToMany(mappedBy = "concert", cascade = {CascadeType.ALL})
+    @Getter
     List<ConcertInstrumentSlot> concertInstrumentSlots;
 
-
+    @OneToMany(mappedBy = "user", cascade = {CascadeType.ALL})
+    List<ConcertApplication> concertApplications;
 }

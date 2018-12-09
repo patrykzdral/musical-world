@@ -11,6 +11,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ConcertDTO {
+    private Long id;
     private String username;
     private String name;
     private String description;

@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -34,17 +36,17 @@ public class ConcertApplicationController {
     @PostMapping(value = "/new", consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
-    public void createConcertApplication(@Valid @RequestBody ConcertApplicationDTO request) {
-        concertApplicationService.save(request);
+    public void createConcertApplication(@Valid @RequestBody ConcertApplicationDTO request, Authentication authentication) {
+        concertApplicationService.save(request,((User) authentication.getPrincipal()).getUsername());
     }
 
     @PostMapping(value = "/examine", consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> examineConcertApplication(@RequestBody ConcertApplicationExamineDTO
+    @ResponseStatus(HttpStatus.OK)
+    public void examineConcertApplication(Authentication authentication, @RequestBody ConcertApplicationExamineDTO
                                                                         concertApplicationExamineDTO) {
         log.info(concertApplicationExamineDTO.toString());
-        concertApplicationService.examine(concertApplicationExamineDTO);
-        return ResponseEntity.status(HttpStatus.OK).body("Application has been examined correctly");
+        concertApplicationService.examine(concertApplicationExamineDTO, ((User) authentication.getPrincipal()).getUsername());
     }
 
     @GetMapping(value = "/list/{id}", produces = MediaType.APPLICATION_JSON_VALUE)

@@ -1,6 +1,6 @@
 package com.patrykzdral.musicalworldcore.validation;
 
-import com.patrykzdral.musicalworldcore.validation.exception.InternalException;
+import com.patrykzdral.musicalworldcore.validation.exception.ApplicationException;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
@@ -25,7 +25,7 @@ public class EmailValidator implements ConstraintValidator<ValidEmail, String> {
         Pattern pattern = Pattern.compile(EMAIL_PATTERN);
         Matcher matcher = pattern.matcher(email);
         if (!matcher.matches())
-            throw new InternalException("Registration error", message);
+            throw new ApplicationException("Registration error", message);
         return matcher.matches();
     }
 }

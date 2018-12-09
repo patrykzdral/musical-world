@@ -1,6 +1,7 @@
 package com.patrykzdral.musicalworldcore.controller.picture;
 
 import com.patrykzdral.musicalworldcore.persistance.entity.Picture;
+import com.patrykzdral.musicalworldcore.services.concert.service.AdminConcertsService;
 import com.patrykzdral.musicalworldcore.services.picture.service.PictureService;
 import com.patrykzdral.musicalworldcore.services.user.service.UserService;
 import lombok.extern.slf4j.Slf4j;
@@ -9,6 +10,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -23,12 +26,15 @@ public class PictureController {
     private final
     PictureService pictureService;
     private final
+    AdminConcertsService adminConcertsService;
+    private final
     UserService userService;
     private List<String> files = new ArrayList<String>();
 
     @Autowired
-    public PictureController(PictureService pictureService, UserService userService) {
+    public PictureController(PictureService pictureService, AdminConcertsService adminConcertsService, UserService userService) {
         this.pictureService = pictureService;
+        this.adminConcertsService = adminConcertsService;
         this.userService = userService;
     }
 
@@ -51,13 +57,10 @@ public class PictureController {
     }
 
     @PostMapping(value="user", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> handleUserFileUpload(@RequestParam("file") MultipartFile file,
-                                                       @RequestParam("username") String username) {
-        log.info(username);
-        log.info("FILE    "+ file.getName());
+    public ResponseEntity<String> handleUserFileUpload(@RequestParam("file") MultipartFile file, Authentication authentication) {
         String message = "";
         try {
-            userService.assignPhotoToUser(file,username);
+            userService.assignPhotoToUser(file,((User) authentication.getPrincipal()).getUsername());
             pictureService.save(file);
             message = "You successfully uploaded " + file.getOriginalFilename() + "!";
             return ResponseEntity.status(HttpStatus.OK).body(message);
@@ -67,6 +70,21 @@ public class PictureController {
         }
     }
 
+
+    @PostMapping(value="concert", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> handleConcertFileUpload(@RequestParam("file") MultipartFile file,
+                                                       @RequestParam("id") Long id) {
+        String message = "";
+        try {
+            adminConcertsService.assignPhotoToConcert(file,id);
+            pictureService.save(file);
+            message = "You successfully uploaded " + file.getOriginalFilename() + "!";
+            return ResponseEntity.status(HttpStatus.OK).body(message);
+        } catch (Exception e) {
+            message = "FAIL to upload " + file.getOriginalFilename() + "!";
+            return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(message);
+        }
+    }
     @GetMapping("/get")
     public ResponseEntity<byte[]> getFile(@RequestParam Long id) {
         Optional<Picture> fileOptional = pictureService.findById(id);
